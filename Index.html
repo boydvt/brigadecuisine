@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="fr"><head><base target="_top"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Brigade Cuisine Live</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--tom:#E8503A;--tomd:#C23B27;--cream:#FFF6E5;--mint:#2BB38A;--mintd:#1E8C6B;--mus:#F5B82E;--musd:#D99A12;--navy:#2D3047;--ink:#3A2A1E;--sky:#3D7BC9;--line:#EAD9BF;--card:#FFFFFF}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--cream);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;font-size:16px}
+body{background-image:linear-gradient(45deg,#FCEBD0 25%,transparent 25%,transparent 75%,#FCEBD0 75%),linear-gradient(45deg,#FCEBD0 25%,transparent 25%,transparent 75%,#FCEBD0 75%);background-size:48px 48px;background-position:0 0,24px 24px;overflow-x:hidden}
+h1,h2,h3,.bal{font-family:'Baloo 2','Nunito',sans-serif;margin:0;line-height:1.1}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+svg{display:block}
+#app{max-width:560px;margin:0 auto;min-height:100vh;padding:0 12px 96px;position:relative}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 22px;border-radius:18px;font-family:'Baloo 2',sans-serif;font-weight:700;font-size:19px;background:var(--tom);color:#fff;box-shadow:0 5px 0 var(--tomd);transition:transform .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--tomd)}
+.btn.g{background:var(--mint);box-shadow:0 5px 0 var(--mintd)}
+.btn.y{background:var(--mus);box-shadow:0 5px 0 var(--musd);color:var(--ink)}
+.btn.w{background:#fff;color:var(--ink);box-shadow:0 5px 0 var(--line);border:2px solid var(--line)}
+.btn.sm{padding:8px 14px;font-size:15px;border-radius:14px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.btn.wide{width:100%}
+.card{background:var(--card);border:3px solid var(--line);border-radius:22px;box-shadow:0 6px 0 var(--line);padding:16px}
+.muted{color:#8A7560;font-size:14px}
+.row{display:flex;gap:10px;align-items:center}
+.col{display:flex;flex-direction:column;gap:12px}
+.center{text-align:center}
+input,select{font:inherit;font-size:18px;padding:12px 14px;border-radius:14px;border:3px solid var(--line);background:#fff;width:100%;color:var(--ink)}
+input:focus{outline:none;border-color:var(--mus)}
+label{font-weight:800;font-size:14px;display:block;margin-bottom:6px}
+
+/* top bar */
+#top{position:sticky;top:0;z-index:20;margin:0 -12px 12px;padding:10px 12px 8px;background:var(--navy);color:#fff;border-bottom:4px solid #1D1F30}
+#top .r1{display:flex;align-items:center;gap:8px}
+#top .logo{font-family:'Baloo 2';font-weight:800;font-size:18px;color:var(--mus)}
+#top .meta{font-size:12px;opacity:.85;margin-left:auto;text-align:right}
+.prog{display:flex;gap:4px;margin-top:8px}
+.prog i{flex:1;height:8px;border-radius:6px;background:#4A4E6E;position:relative}
+.prog i.on{background:var(--mus)}
+.prog i.now{background:var(--tom);animation:pulse 1.2s infinite}
+.mates{display:flex;gap:4px;margin-top:8px;overflow-x:auto}
+.mate{display:flex;align-items:center;gap:3px;background:#3B3F5C;border-radius:20px;padding:2px 8px 2px 2px;font-size:12px;white-space:nowrap;position:relative}
+.mate svg{width:22px;height:22px}
+.mate.off{opacity:.45}
+.mate.act{background:var(--tom)}
+.mate.me{outline:2px solid var(--mus)}
+.rolechip{display:inline-block;background:var(--mus);color:var(--ink);font-weight:800;border-radius:10px;padding:1px 8px;font-size:12px}
+
+/* banner peran */
+.stagehead{display:flex;align-items:center;gap:12px;margin:4px 0 12px}
+.stagehead .ic{width:58px;height:58px;flex:none;border-radius:18px;background:#fff;border:3px solid var(--line);display:grid;place-items:center}
+.stagehead .ic svg{width:44px;height:44px}
+.stagehead h2{font-size:26px}
+.who{background:#fff;border:2px dashed var(--mus);border-radius:14px;padding:8px 12px;font-size:14px;margin-bottom:12px}
+.who b{color:var(--tom)}
+.mine{background:#FFF0C2;border:3px solid var(--mus)}
+
+/* overlay */
+#ov{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(45,48,71,.82);padding:20px}
+#ov.show{display:flex}
+#ov .box{background:#fff;border-radius:28px;padding:26px 22px;max-width:380px;width:100%;text-align:center;border:4px solid var(--mus);animation:popin .5s cubic-bezier(.2,1.6,.4,1)}
+#ov .box .big{font-family:'Baloo 2';font-size:34px;font-weight:800;color:var(--tom)}
+#ov .chefimg{width:120px;margin:0 auto 6px;animation:bob 1.6s ease-in-out infinite}
+#toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(30px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:16px;font-weight:700;z-index:60;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:40;overflow:hidden}
+.floaty{position:absolute;bottom:80px;font-size:34px;animation:floatup 2.6s ease-out forwards;text-align:center}
+.floaty small{display:block;font-size:11px;font-weight:800;background:#fff;border-radius:8px;padding:0 6px;color:var(--ink)}
+.confetti{position:absolute;top:-20px;width:10px;height:16px;border-radius:3px;animation:fall linear forwards}
+
+/* dock reaksi */
+#dock{position:fixed;left:0;right:0;bottom:0;z-index:30;display:none;justify-content:center;gap:8px;padding:10px 10px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,rgba(255,246,229,.95) 30%)}
+#dock.show{display:flex}
+#dock button{width:52px;height:52px;border-radius:50%;background:#fff;border:3px solid var(--line);font-size:24px;box-shadow:0 4px 0 var(--line)}
+#dock button:active{transform:translateY(3px);box-shadow:none}
+
+/* join */
+.hero{text-align:center;padding:26px 0 10px}
+.hero h1{font-size:40px;color:var(--tom);text-shadow:0 3px 0 #FFD9A8}
+.hero .sub{font-weight:700;color:var(--navy)}
+.hero .chefimg{width:130px;margin:0 auto;animation:bob 1.8s ease-in-out infinite}
+.gpick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gpick button{padding:12px 0;border-radius:14px;background:#fff;border:3px solid var(--line);font-family:'Baloo 2';font-weight:800;font-size:20px}
+.gpick button.on{background:var(--mus);border-color:var(--musd)}
+.priv{background:#E6F7F1;border:2px solid #A8E2CF;border-radius:14px;padding:10px 12px;font-size:13px}
+
+/* lobby */
+.hats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.hatc{text-align:center;font-weight:800;font-size:13px;animation:popin .5s cubic-bezier(.2,1.6,.4,1)}
+.hatc svg{width:58px;height:58px;margin:0 auto}
+.hatc.off{opacity:.4}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.roles div{background:#fff;border:2px solid var(--line);border-radius:14px;padding:8px 10px;font-size:13px}
+.roles b{display:block;font-family:'Baloo 2';font-size:16px;color:var(--tom)}
+.door{position:relative;height:150px;display:flex;justify-content:center;align-items:flex-end}
+.door .chefimg{width:120px;animation:bob 1.6s ease-in-out infinite}
+
+/* menu */
+.dishes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dcard{background:#fff;border:3px solid var(--line);border-radius:20px;padding:8px 8px 10px;text-align:center;position:relative;box-shadow:0 5px 0 var(--line);transition:transform .15s}
+.dcard .dish{width:100%;height:78px}
+.dcard b{display:block;font-family:'Baloo 2';font-size:16px;line-height:1.1;margin-top:2px}
+.dcard span{font-size:12px;color:#8A7560}
+.dcard.sel{border-color:var(--tom);background:#FFF1EC;transform:translateY(-3px);box-shadow:0 8px 0 #F7B9A9}
+.dcard.taken{filter:grayscale(1);opacity:.55}
+.dcard .tk{position:absolute;top:8px;left:50%;transform:translateX(-50%) rotate(-8deg);background:var(--navy);color:#fff;font-weight:800;font-size:12px;padding:3px 10px;border-radius:8px;white-space:nowrap}
+.votes{display:flex;justify-content:center;gap:2px;min-height:22px;margin-top:4px}
+.votes svg{width:22px;height:22px;animation:popin .4s}
+.sticky{position:sticky;bottom:78px;z-index:10;margin-top:14px}
+
+/* pasar */
+.awning{height:34px;margin:0 -12px;background:repeating-linear-gradient(90deg,var(--tom) 0 34px,#fff 34px 68px);border-radius:0 0 50% 50%/0 0 18px 18px;box-shadow:0 4px 0 rgba(0,0,0,.08)}
+.cartbar{display:flex;align-items:center;gap:8px;background:#fff;border:3px solid var(--line);border-radius:18px;padding:8px 10px;margin:10px 0}
+#cart{width:56px;height:46px;flex:none}
+#cart .wh{animation:spin 1s linear infinite;transform-origin:center;transform-box:fill-box}
+.bitems{display:flex;flex-wrap:wrap;gap:4px;flex:1;min-height:36px}
+.bitems span{width:36px;height:36px;background:#FFF6E5;border-radius:10px;padding:3px;animation:popin .4s cubic-bezier(.2,1.6,.4,1)}
+.wallet{font-family:'Baloo 2';font-weight:800;background:var(--mus);border-radius:12px;padding:2px 10px;white-space:nowrap}
+.shelf{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;background:#B9804B;border:4px solid #8A5A2E;border-radius:18px;padding:10px 8px 6px;box-shadow:inset 0 -6px 0 rgba(0,0,0,.15)}
+.it{background:#FFF8EC;border-radius:14px;padding:6px 4px 4px;position:relative;border:3px solid transparent;transition:transform .12s}
+.it svg{width:100%;height:52px}
+.it .pr{position:absolute;top:-6px;right:-4px;background:var(--mus);border-radius:8px;padding:0 5px;font-size:11px;font-weight:800;border:2px solid var(--musd)}
+.it.in{border-color:var(--mint);background:#E6F7F1}
+.it.in:after{content:'✓';position:absolute;left:4px;top:2px;background:var(--mint);color:#fff;border-radius:50%;width:18px;height:18px;font-size:12px;display:grid;place-items:center;font-weight:900}
+.it.sel{border-color:var(--tom);transform:scale(1.06)}
+.it .nm{display:block;font-size:10.5px;font-weight:800;text-align:center;line-height:1.1;min-height:12px}
+.pingb{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);background:var(--tom);color:#fff;font-size:10px;font-weight:800;border-radius:8px;padding:1px 6px;white-space:nowrap;animation:popin .3s;z-index:2}
+.fiche{background:#FFFDF6;border:3px solid var(--line);border-radius:18px;padding:14px 16px;position:relative;background-image:repeating-linear-gradient(transparent 0 27px,#F1E4CF 27px 28px);background-position:0 44px}
+.fiche h3{font-size:22px;color:var(--tom)}
+.fiche ul{margin:8px 0 0;padding-left:20px;line-height:28px;font-weight:700}
+.pinbar{position:sticky;bottom:78px;z-index:10;background:#fff;border:3px solid var(--tom);border-radius:18px;padding:10px;display:flex;align-items:center;gap:10px;margin-top:12px;animation:slideup .25s}
+.pinbar .pic{width:54px;height:54px;flex:none}
+.pinbar .nmb{flex:1;font-family:'Baloo 2';font-size:20px;font-weight:800;line-height:1}
+.spk{width:36px;height:36px;border-radius:50%;background:var(--sky);color:#fff;display:inline-grid;place-items:center;flex:none}
+.spk svg{width:20px;height:20px}
+
+/* langkah */
+.slots{display:flex;flex-direction:column;gap:6px}
+.slot{display:flex;gap:8px;align-items:flex-start;background:#fff;border:3px dashed var(--line);border-radius:16px;padding:8px 10px;min-height:50px}
+.slot .n{flex:none;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-family:'Baloo 2'}
+.slot.f{border-style:solid;border-color:var(--mint);animation:popin .35s cubic-bezier(.2,1.6,.4,1)}
+.slot .tx{flex:1;font-weight:700;font-size:15px;line-height:1.35}
+.pool{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.scard{display:flex;gap:8px;align-items:center;background:#FFF1C9;border:3px solid var(--mus);border-radius:16px;padding:10px 12px;font-weight:700;font-size:15px;line-height:1.35;box-shadow:0 4px 0 var(--musd);position:relative;text-align:left;width:100%}
+.scard .tx{flex:1}
+.inf{display:inline-block;background:var(--navy);color:#fff;border-radius:8px;padding:0 6px;font-weight:800}
+.blank{display:inline-block;min-width:70px;border-bottom:3px solid var(--tom);color:var(--tom);font-weight:900;text-align:center}
+.trapnote{background:#FFE3DD;border:2px solid #F6A592;border-radius:14px;padding:8px 12px;font-size:14px;font-weight:700;margin-bottom:10px}
+.vchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.vchips button{padding:6px 12px;border-radius:12px;background:#F2EEE8;border:2px solid var(--line);font-weight:800;font-size:15px}
+.vchips button.on{background:var(--sky);border-color:#2C5E9E;color:#fff}
+.chkl{display:flex;flex-direction:column;gap:8px}
+.chki{background:#fff;border:3px solid var(--line);border-radius:16px;padding:10px 12px}
+.chki .tx{font-weight:700;line-height:1.4}
+.bask2{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bk{background:#fff;border:3px solid var(--line);border-radius:14px;padding:6px;text-align:center;font-size:12px;font-weight:800;position:relative}
+.bk svg{width:44px;height:44px;margin:0 auto}
+.bk.rmd{opacity:.5;border-style:dashed}
+.bk button{margin-top:4px;font-size:12px;padding:3px 8px;border-radius:9px;background:#FFE3DD;font-weight:800}
+.bk.rmd button{background:#E6F7F1}
+
+/* masak */
+.kitchen{position:relative;background:linear-gradient(#BFE6F2 0 46%,#F4D6A8 46% 100%);border:4px solid var(--navy);border-radius:24px;overflow:hidden;height:210px}
+.kitchen:before{content:'';position:absolute;left:0;right:0;top:46%;height:12px;background:#8A5A2E}
+.kitchen .win{position:absolute;left:14px;top:12px;width:70px;height:56px;background:#E9F8FF;border:4px solid #fff;border-radius:8px}
+.kitchen .tool{position:absolute;left:50%;bottom:10px;width:250px;transform:translateX(-50%)}
+.kitchen .kchef{position:absolute;right:6px;top:14px;width:84px;animation:bob 1.4s ease-in-out infinite}
+.kitchen .bub{position:absolute;left:96px;top:14px;right:96px;background:#fff;border:3px solid var(--navy);border-radius:16px;padding:6px 10px;font-family:'Baloo 2';font-weight:800;font-size:18px;text-align:center;line-height:1.1}
+.whisk{animation:whisk .5s linear infinite;transform-origin:100px 50px}
+.knife{animation:chop .45s ease-in-out infinite;transform-origin:150px 30px}
+.flame path{animation:flick .3s ease-in-out infinite alternate;transform-origin:center bottom;transform-box:fill-box}
+.steam path,.steam{animation:steam 1.6s ease-in-out infinite}
+.jug{animation:tilt 2s ease-in-out infinite;transform-origin:140px 30px}
+.stream{animation:stream 2s ease-in-out infinite}
+.cloche{animation:lift 2s ease-in-out infinite}
+.spark{animation:twinkle 1s ease-in-out infinite}
+.drop{animation:drop 1.2s ease-in infinite}
+.clock{animation:pulse 1s infinite}
+.paused *{animation-play-state:paused!important}
+.cdots{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.cdots i{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--line);display:grid;place-items:center;font-style:normal;font-weight:900;font-size:13px}
+.cdots i.d{background:var(--mint);border-color:var(--mintd);color:#fff}
+.cdots i.c{background:var(--tom);border-color:var(--tomd);color:#fff;animation:pulse 1s infinite}
+.pad{margin-top:12px;height:230px;border-radius:26px;background:var(--navy);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;touch-action:none;user-select:none;-webkit-user-select:none;position:relative;overflow:hidden;border:4px solid #1D1F30}
+.pad .verb{font-family:'Baloo 2';font-size:34px;font-weight:800;color:var(--mus)}
+.pad .hint{font-size:15px;opacity:.9;padding:0 16px}
+.pad .meter{width:80%;height:26px;border-radius:14px;background:#4A4E6E;margin-top:14px;position:relative;overflow:hidden}
+.pad .meter .zone{position:absolute;top:0;bottom:0;left:65%;width:20%;background:rgba(43,179,138,.6)}
+.pad .meter .fill{position:absolute;top:0;bottom:0;left:0;width:0;background:var(--tom)}
+.pad .cnt{font-family:'Baloo 2';font-size:54px;font-weight:800;line-height:1}
+.pad .ring{position:absolute;inset:0;pointer-events:none}
+.pad.hit{animation:hit .12s}
+.pad .res{font-family:'Baloo 2';font-size:40px;font-weight:800;animation:popin .4s cubic-bezier(.2,1.6,.4,1)}
+
+/* hasil */
+.reveal{position:relative;height:220px;display:flex;align-items:flex-end;justify-content:center}
+.reveal .dish{width:270px;height:186px}
+.reveal .clo{position:absolute;bottom:26px;left:50%;width:250px;margin-left:-125px;animation:clo 2.2s ease-in forwards}
+.reveal .rays{position:absolute;left:50%;top:50%;width:360px;height:360px;margin:-200px 0 0 -180px;background:repeating-conic-gradient(rgba(245,184,46,.35) 0 10deg,transparent 10deg 20deg);border-radius:50%;animation:spin 12s linear infinite;opacity:0;animation-delay:1.6s;animation-fill-mode:forwards}
+.dish.perfect .dg{animation:bob 2s ease-in-out infinite}
+.dish.meh .dg{filter:saturate(.6)}
+.dish.rate .dg{filter:sepia(1) saturate(1.6) brightness(.42)}
+.smoke{position:absolute;bottom:90px;width:40px;height:40px;border-radius:50%;background:#7D7D7D;opacity:0;animation:smoke 2.4s ease-out infinite}
+.stars{display:flex;justify-content:center;gap:6px;margin:6px 0}
+.stars svg{width:54px;height:54px;opacity:.18}
+.stars svg.on{opacity:1;animation:starpop .6s cubic-bezier(.2,1.6,.4,1) both}
+.bignum{font-family:'Baloo 2';font-size:64px;font-weight:800;color:var(--tom);text-align:center;line-height:1}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar .lb{display:flex;justify-content:space-between;font-weight:800;font-size:14px}
+.bar .tr{height:14px;border-radius:8px;background:#F1E4CF;overflow:hidden}
+.bar .tr i{display:block;height:100%;border-radius:8px;width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.mist{font-size:14px;line-height:1.5}
+.mist .bad{color:var(--tomd);font-weight:800}
+.mist .good{color:var(--mintd);font-weight:800}
+.recipe ol{padding-left:22px;margin:6px 0;line-height:1.5;font-weight:600}
+.recipe li.x{color:var(--tomd)}
+.quote{display:flex;gap:10px;align-items:center}
+.quote .chefimg{width:80px;flex:none}
+.quote .sb{background:#fff;border:3px solid var(--navy);border-radius:18px;padding:10px 12px;font-family:'Baloo 2';font-weight:800;font-size:18px;line-height:1.15}
+.fact{background:#E8F1FF;border:3px solid #B5CFF5;border-radius:18px;padding:12px 14px;font-size:14px}
+.fact b{font-family:'Baloo 2';font-size:17px;color:var(--sky)}
+
+/* guru */
+.gtable{display:flex;flex-direction:column;gap:10px}
+.gcard{background:#fff;border:3px solid var(--line);border-radius:18px;padding:12px}
+.gcard h3{font-size:20px}
+.tag{display:inline-block;border-radius:8px;padding:1px 8px;font-size:12px;font-weight:800;background:#F2EEE8}
+.tag.st{background:var(--navy);color:#fff}
+.tag.ok{background:var(--mint);color:#fff}
+.claims{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.claims div{background:#fff;border:2px solid var(--line);border-radius:12px;padding:6px 8px;font-size:13px;display:flex;align-items:center;gap:6px}
+.claims div.t{background:#FFF1EC;border-color:#F7B9A9}
+.rank{display:flex;align-items:center;gap:10px;background:#fff;border:3px solid var(--line);border-radius:16px;padding:8px 12px;font-weight:800}
+.rank .p{font-family:'Baloo 2';font-size:26px;width:36px;text-align:center;color:var(--tom)}
+
+/* animasi */
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+@keyframes popin{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes slideup{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes enter{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes floatup{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1;transform:translateY(-40px) scale(1.1)}100%{transform:translateY(-70vh) scale(1);opacity:0}}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes whisk{0%{transform:rotate(-18deg) translateX(-6px)}50%{transform:rotate(18deg) translateX(6px)}100%{transform:rotate(-18deg) translateX(-6px)}}
+@keyframes chop{0%,100%{transform:rotate(0)}50%{transform:rotate(22deg)}}
+@keyframes flick{from{transform:scaleY(.8)}to{transform:scaleY(1.15)}}
+@keyframes steam{0%{transform:translateY(6px);opacity:0}40%{opacity:1}100%{transform:translateY(-14px);opacity:0}}
+@keyframes tilt{0%,100%{transform:rotate(0)}40%,70%{transform:rotate(-28deg)}}
+@keyframes stream{0%,30%,85%,100%{opacity:0}40%,70%{opacity:1}}
+@keyframes lift{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:1}}
+@keyframes drop{0%{transform:translateY(-10px);opacity:0}30%{opacity:1}100%{transform:translateY(46px);opacity:0}}
+@keyframes hit{50%{transform:scale(.97)}}
+@keyframes clo{0%{transform:translateY(0)}55%{transform:translateY(0) rotate(-4deg)}62%{transform:translateY(0) rotate(4deg)}70%{transform:translateY(0)}100%{transform:translateY(-260px) rotate(-20deg);opacity:0}}
+@keyframes smoke{0%{transform:translate(0,0) scale(.4);opacity:0}20%{opacity:.55}100%{transform:translate(-20px,-120px) scale(2.2);opacity:0}}
+@keyframes starpop{0%{transform:scale(0) rotate(-60deg)}100%{transform:scale(1) rotate(0)}}
+.enter{animation:enter .4s ease-out}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
+#top:empty{display:none}
+.slot{width:100%;text-align:left;font:inherit;color:inherit}
+.dcard{font:inherit;color:inherit;width:100%}
+.it{font:inherit;color:inherit}
+</style></head><body>
+<div id="app"><div id="top"></div><div id="main"></div></div>
+<div id="dock"></div><div id="fx"></div><div id="ov"></div><div id="toast"></div>
+<script>var PARAMS = <?!= params ?>;</script>
+<script>
+/* ===== CORE: data + aturan main (dipakai server & HP) ===== */
+var CORE = (function () {
+  var CAT = {
+    farine: { n: "la farine", i: "tepung terigu", p: 2 },
+    oeufs: { n: "les œufs", i: "telur", p: 3 },
+    lait: { n: "le lait", i: "susu", p: 2 },
+    sucre: { n: "le sucre", i: "gula", p: 1 },
+    beurre: { n: "le beurre", i: "mentega", p: 3 },
+    sel: { n: "le sel", i: "garam", p: 1 },
+    fromage: { n: "le fromage", i: "keju", p: 4 },
+    poivre: { n: "le poivre", i: "merica", p: 2 },
+    riz: { n: "le riz", i: "nasi / beras", p: 2 },
+    ail: { n: "l'ail", i: "bawang putih", p: 1 },
+    oignon: { n: "l'oignon", i: "bawang bombai", p: 1 },
+    kecap: { n: "la sauce soja sucrée", i: "kecap manis", p: 2 },
+    huile: { n: "l'huile", i: "minyak goreng", p: 3 },
+    piment: { n: "le piment", i: "cabai", p: 1 },
+    banane: { n: "la banane", i: "pisang", p: 1 },
+    pomme: { n: "la pomme", i: "apel", p: 1 },
+    fraise: { n: "les fraises", i: "stroberi", p: 3 },
+    orange: { n: "l'orange", i: "jeruk", p: 1 },
+    citron: { n: "le citron", i: "lemon", p: 1 },
+    miel: { n: "le miel", i: "madu", p: 4 },
+    carotte: { n: "les carottes", i: "wortel", p: 1 },
+    pdt: { n: "les pommes de terre", i: "kentang", p: 2 },
+    tomate: { n: "les tomates", i: "tomat", p: 2 },
+    eau: { n: "l'eau", i: "air", p: 1 },
+    yaourt: { n: "le yaourt", i: "yoghurt", p: 2 },
+    levure: { n: "la levure", i: "pengembang kue", p: 1 },
+    glacons: { n: "les glaçons", i: "es batu", p: 1 },
+    pates: { n: "les pâtes", i: "pasta", p: 2 },
+    chocolat: { n: "le chocolat", i: "cokelat", p: 4 }
+  };
+  /* [vous (benar), infinitif, tu] */
+  var VERB = {
+    verser: ["versez", "verser", "verse"], ajouter: ["ajoutez", "ajouter", "ajoute"],
+    incorporer: ["incorporez", "incorporer", "incorpore"], laisser: ["laissez", "laisser", "laisse"],
+    faire: ["faites", "faire", "fais"], servir: ["servez", "servir", "sers"],
+    mettre: ["mettez", "mettre", "mets"], casser: ["cassez", "casser", "casse"],
+    battre: ["battez", "battre", "bats"], couper: ["coupez", "couper", "coupe"],
+    plier: ["pliez", "plier", "plie"], chauffer: ["chauffez", "chauffer", "chauffe"],
+    melanger: ["mélangez", "mélanger", "mélange"], laver: ["lavez", "laver", "lave"],
+    eplucher: ["épluchez", "éplucher", "épluche"], mixer: ["mixez", "mixer", "mixe"],
+    decorer: ["décorez", "décorer", "décore"], prechauffer: ["préchauffez", "préchauffer", "préchauffe"],
+    tremper: ["trempez", "tremper", "trempe"], poser: ["posez", "poser", "pose"],
+    egoutter: ["égouttez", "égoutter", "égoutte"], saupoudrer: ["saupoudrez", "saupoudrer", "saupoudre"],
+    separer: ["séparez", "séparer", "sépare"]
+  };
+  function S(t, v, a) { return { t: t, v: v, a: a }; }
+  var DISHES = [
+    { id: "crepes", fr: "Les crêpes", idn: "Crêpe khas Bretagne", srv: "4 personnes",
+      ing: [["farine", "250 g de"], ["oeufs", "4"], ["lait", "50 cl de"], ["sucre", "2 cuillères de"], ["beurre", "30 g de"], ["sel", "1 pincée de"]],
+      dis: ["levure", "fromage", "riz", "huile", "poivre", "miel"],
+      steps: [S("D'abord, ___ la farine, le sucre et le sel dans un saladier.", "verser", "pour"),
+        S("___ les œufs au centre.", "ajouter", "add"),
+        S("___ doucement le lait en mélangeant.", "incorporer", "mix"),
+        S("___ la pâte reposer une heure.", "laisser", "wait"),
+        S("___ fondre un peu de beurre dans la poêle.", "faire", "heat"),
+        S("___ une louche de pâte et faites cuire une minute de chaque côté.", "verser", "pour"),
+        S("Enfin, ___ les crêpes avec du sucre ou de la confiture.", "servir", "serve")],
+      trap: S("___ les crêpes au four pendant deux heures.", "mettre", "heat"),
+      fact: "Di Prancis ada hari raya crêpe: La Chandeleur (2 Februari). Tradisinya, orang membalik crêpe di wajan sambil memegang koin agar beruntung sepanjang tahun." },
+    { id: "omelette", fr: "L'omelette au fromage", idn: "Telur dadar keju", srv: "2 personnes",
+      ing: [["oeufs", "4"], ["fromage", "50 g de"], ["lait", "1 cuillère de"], ["beurre", "1 noix de"], ["sel", "un peu de"], ["poivre", "un peu de"]],
+      dis: ["sucre", "farine", "chocolat", "banane", "miel", "glacons"],
+      steps: [S("D'abord, ___ les œufs dans un bol.", "casser", "add"),
+        S("___ un peu de lait, du sel et du poivre.", "ajouter", "add"),
+        S("___ bien avec une fourchette.", "battre", "mix"),
+        S("___ le fromage en petits morceaux.", "couper", "cut"),
+        S("___ fondre le beurre dans la poêle.", "faire", "heat"),
+        S("___ les œufs battus et le fromage dans la poêle.", "verser", "pour"),
+        S("Enfin, ___ l'omelette en deux et servez-la chaude.", "plier", "serve")],
+      trap: S("___ les œufs dans le lait toute la nuit.", "laisser", "wait"),
+      fact: "Pepatah Prancis: « On ne fait pas d'omelette sans casser des œufs » — tidak bisa membuat omelet tanpa memecahkan telur, artinya setiap hasil butuh pengorbanan." },
+    { id: "nasigoreng", fr: "Le nasi goreng", idn: "Nasi goreng", srv: "2 personnes",
+      ing: [["riz", "2 assiettes de"], ["oeufs", "2"], ["ail", "2 gousses d'"], ["oignon", "1"], ["piment", "2", "2 piments"], ["kecap", "2 cuillères de"], ["huile", "2 cuillères d'"], ["sel", "un peu de"]],
+      dis: ["pates", "lait", "chocolat", "fraise", "pdt", "miel"],
+      steps: [S("D'abord, ___ finement l'ail, l'oignon et le piment.", "couper", "cut"),
+        S("___ un peu d'huile dans une poêle.", "chauffer", "heat"),
+        S("___ revenir l'ail, l'oignon et le piment pendant deux minutes.", "faire", "heat"),
+        S("___ les œufs dans la poêle et mélangez vite.", "casser", "add"),
+        S("___ le riz cuit.", "ajouter", "add"),
+        S("___ la sauce soja sucrée et le sel, puis remuez bien.", "verser", "pour"),
+        S("Enfin, ___ le nasi goreng chaud avec des chips de crevettes.", "servir", "serve")],
+      trap: S("___ le riz avec du lait et du chocolat.", "melanger", "mix"),
+      fact: "Dalam menu restoran berbahasa Prancis, nasi goreng kadang ditulis « riz frit à l'indonésienne » (nasi goreng ala Indonesia)." },
+    { id: "salade", fr: "La salade de fruits", idn: "Salad buah", srv: "4 personnes",
+      ing: [["banane", "2", "2 bananes"], ["pomme", "1"], ["fraise", "200 g de"], ["orange", "1"], ["citron", "le jus d'un"], ["miel", "1 cuillère de"]],
+      dis: ["tomate", "carotte", "oignon", "sel", "fromage", "pates"],
+      steps: [S("D'abord, ___ les fruits à l'eau froide.", "laver", "mix"),
+        S("___ la banane et l'orange.", "eplucher", "cut"),
+        S("___ tous les fruits en petits morceaux.", "couper", "cut"),
+        S("___ les morceaux dans un grand bol.", "mettre", "add"),
+        S("___ le jus de citron et le miel.", "ajouter", "pour"),
+        S("___ délicatement.", "melanger", "mix"),
+        S("Enfin, ___ la salade au réfrigérateur trente minutes avant de servir.", "laisser", "wait")],
+      trap: S("___ frire les fruits dans l'huile chaude.", "faire", "heat"),
+      fact: "Salad buah yang dipotong kecil-kecil juga disebut « une macédoine de fruits » dalam bahasa Prancis." },
+    { id: "soupe", fr: "La soupe de légumes", idn: "Sup sayuran", srv: "4 personnes",
+      ing: [["carotte", "3"], ["pdt", "2"], ["oignon", "1"], ["tomate", "2"], ["eau", "1 litre d'"], ["sel", "un peu de"], ["poivre", "un peu de"]],
+      dis: ["chocolat", "fraise", "banane", "miel", "yaourt", "glacons"],
+      steps: [S("D'abord, ___ et lavez les légumes.", "eplucher", "cut"),
+        S("___ les légumes en cubes.", "couper", "cut"),
+        S("___ bouillir un litre d'eau dans une casserole.", "faire", "heat"),
+        S("___ les légumes dans l'eau bouillante.", "mettre", "add"),
+        S("___ cuire vingt-cinq minutes à feu moyen.", "laisser", "wait"),
+        S("___ du sel et du poivre.", "ajouter", "add"),
+        S("Enfin, ___ la soupe et servez-la chaude.", "mixer", "mix")],
+      trap: S("___ la soupe avec des fraises et du chocolat.", "decorer", "serve"),
+      fact: "Sup yang diblender halus dalam bahasa Prancis disebut « un potage » atau « un velouté »." },
+    { id: "gateau", fr: "Le gâteau au yaourt", idn: "Kue yoghurt", srv: "6 personnes",
+      ing: [["yaourt", "1 pot de"], ["farine", "3 pots de"], ["sucre", "2 pots de"], ["oeufs", "3"], ["huile", "1/2 pot d'"], ["levure", "1 sachet de"]],
+      dis: ["riz", "ail", "oignon", "poivre", "tomate", "kecap"],
+      steps: [S("D'abord, ___ le four à 180 degrés.", "prechauffer", "heat"),
+        S("___ le yaourt dans un saladier.", "verser", "pour"),
+        S("___ les œufs, le sucre et l'huile.", "ajouter", "add"),
+        S("___ la farine et la levure petit à petit.", "incorporer", "mix"),
+        S("___ la pâte dans un moule.", "verser", "pour"),
+        S("___ cuire trente-cinq minutes au four.", "faire", "heat"),
+        S("Enfin, ___ refroidir le gâteau avant de le couper.", "laisser", "wait")],
+      trap: S("___ du poivre et de l'ail dans la pâte.", "mettre", "add"),
+      fact: "Gâteau au yaourt adalah kue pertama yang biasa dibuat anak-anak Prancis. Takarannya memakai pot yoghurt yang sudah kosong sebagai gelas ukur!" },
+    { id: "pisang", fr: "Le pisang goreng", idn: "Pisang goreng", srv: "4 personnes",
+      ing: [["banane", "4", "4 bananes"], ["farine", "100 g de"], ["sucre", "1 cuillère de"], ["eau", "10 cl d'"], ["huile", "beaucoup d'"], ["sel", "1 pincée de"]],
+      dis: ["oignon", "ail", "tomate", "poivre", "kecap", "pdt"],
+      steps: [S("D'abord, ___ les bananes.", "eplucher", "cut"),
+        S("___ les bananes en deux dans la longueur.", "couper", "cut"),
+        S("___ la farine, le sucre, le sel et l'eau dans un bol.", "melanger", "mix"),
+        S("___ les bananes dans la pâte.", "tremper", "add"),
+        S("___ beaucoup d'huile dans une poêle.", "chauffer", "heat"),
+        S("___ frire les bananes jusqu'à ce qu'elles soient dorées.", "faire", "heat"),
+        S("Enfin, ___ les bananes sur du papier absorbant et servez.", "poser", "serve")],
+      trap: S("___ les bananes dans la soupe de légumes.", "mettre", "add"),
+      fact: "Dalam bahasa Prancis, gorengan buah bertepung disebut « des beignets ». Jadi pisang goreng = « des beignets de banane »." },
+    { id: "smoothie", fr: "Le smoothie banane-fraise", idn: "Smoothie pisang-stroberi", srv: "2 personnes",
+      ing: [["banane", "1"], ["fraise", "150 g de"], ["lait", "20 cl de"], ["yaourt", "1"], ["miel", "1 cuillère de"], ["glacons", "quelques"]],
+      dis: ["oignon", "ail", "riz", "poivre", "kecap", "farine"],
+      steps: [S("D'abord, ___ les fraises.", "laver", "mix"),
+        S("___ la banane.", "eplucher", "cut"),
+        S("___ les fruits en morceaux.", "couper", "cut"),
+        S("___ les fruits, le lait, le yaourt et le miel dans le mixeur.", "mettre", "add"),
+        S("___ quelques glaçons.", "ajouter", "add"),
+        S("___ pendant une minute.", "mixer", "mix"),
+        S("Enfin, ___ le smoothie dans un grand verre.", "verser", "pour")],
+      trap: S("___ cuire le smoothie au four.", "faire", "heat"),
+      fact: "Kata kerja « mixer » dalam bahasa Prancis berarti memblender. Alatnya disebut « un mixeur » atau « un blender »." },
+    { id: "pates", fr: "Les pâtes à la tomate", idn: "Pasta saus tomat", srv: "4 personnes",
+      ing: [["pates", "400 g de"], ["tomate", "4"], ["ail", "2 gousses d'"], ["oignon", "1"], ["huile", "2 cuillères d'"], ["sel", "un peu de"], ["fromage", "50 g de"]],
+      dis: ["chocolat", "banane", "fraise", "miel", "yaourt", "glacons"],
+      steps: [S("D'abord, ___ bouillir de l'eau salée.", "faire", "heat"),
+        S("___ les pâtes dans l'eau et laissez cuire dix minutes.", "mettre", "add"),
+        S("___ l'ail, l'oignon et les tomates.", "couper", "cut"),
+        S("___ l'huile dans une poêle et faites revenir l'ail et l'oignon.", "chauffer", "heat"),
+        S("___ les tomates et laissez mijoter dix minutes.", "ajouter", "add"),
+        S("___ les pâtes et mélangez-les avec la sauce.", "egoutter", "pour"),
+        S("Enfin, ___ du fromage râpé sur les pâtes.", "saupoudrer", "serve")],
+      trap: S("___ du miel et des fraises dans la sauce.", "ajouter", "add"),
+      fact: "Dalam bahasa Prancis, « les pâtes » selalu jamak. Kita bilang « J'aime les pâtes », bukan « la pâte » (la pâte = adonan)." },
+    { id: "mousse", fr: "La mousse au chocolat", idn: "Mousse cokelat", srv: "4 personnes",
+      ing: [["chocolat", "200 g de"], ["oeufs", "6"], ["sucre", "50 g de"], ["beurre", "30 g de"], ["sel", "1 pincée de"]],
+      dis: ["farine", "riz", "oignon", "poivre", "tomate", "carotte"],
+      steps: [S("D'abord, ___ fondre le chocolat et le beurre au bain-marie.", "faire", "heat"),
+        S("___ les blancs des jaunes d'œufs.", "separer", "add"),
+        S("___ les jaunes au chocolat fondu.", "ajouter", "pour"),
+        S("___ les blancs en neige avec une pincée de sel.", "battre", "mix"),
+        S("___ le sucre petit à petit et battez encore.", "verser", "pour"),
+        S("___ délicatement les blancs au chocolat.", "incorporer", "mix"),
+        S("Enfin, ___ la mousse au réfrigérateur pendant trois heures.", "mettre", "wait")],
+      trap: S("___ frire la mousse dans l'huile chaude.", "faire", "heat"),
+      fact: "« Battre les blancs en neige » artinya mengocok putih telur sampai kaku dan putih seperti salju (la neige)." }
+  ];
+  var DMAP = {}; DISHES.forEach(function (d) { DMAP[d.id] = d; });
+  var GEST = { mix: "tap", add: "tap", serve: "tap", cut: "swipe", heat: "hold", wait: "hold", pour: "hold" };
+  var ROLE_STAGE = { menu: 0, market: 1, steps: 2, check: 3 };
+  var ROLES = { menu: "Chef", market: "Pembeli", steps: "Asisten", check: "Pemeriksa" };
+  var STAGES = ["lobby", "menu", "market", "steps", "check", "cook", "result"];
+  var NSTEP = 7, TRAP = 7, MAXM = 7;
+
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function stepOf(d, c) { return c === TRAP ? d.trap : d.steps[c]; }
+  function newGroup(gid) {
+    return { gid: gid, ver: 0, stage: "lobby", members: [], order: [], ovr: {}, votes: {}, dish: null,
+      market: [], basket: [], removed: [], cards: [], seq: [], vo: {}, verbs: {}, cook: null,
+      pings: [], fx: [], res: null, t0: 0, tS: 0, tEnd: 0, saved: false, born: Math.floor(Math.random() * 1e9) };
+  }
+  function holder(g, stage) {
+    if (g.ovr && g.ovr[stage]) return g.ovr[stage];
+    if (!g.order.length) return null;
+    return g.order[ROLE_STAGE[stage] % g.order.length];
+  }
+  function member(g, pid) { for (var i = 0; i < g.members.length; i++) if (g.members[i].id === pid) return g.members[i]; return null; }
+  function cookHolder(g) { if (!g.cook) return null; return g.cook.as[g.cook.i]; }
+  function inArr(a, x) { return a.indexOf(x) >= 0; }
+  function lcs(a, b) {
+    var m = a.length, n = b.length, dp = [], i, j;
+    for (i = 0; i <= m; i++) { dp.push([]); for (j = 0; j <= n; j++) dp[i].push(0); }
+    for (i = 1; i <= m; i++) for (j = 1; j <= n; j++) dp[i][j] = a[i - 1] === b[j - 1] ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    return dp[m][n];
+  }
+  function score(g) {
+    var d = DMAP[g.dish], need = d.ing.map(function (x) { return x[0]; });
+    var ok = g.basket.filter(function (x) { return inArr(need, x); });
+    var wrong = g.basket.filter(function (x) { return !inArr(need, x); });
+    var miss = need.filter(function (x) { return !inArr(g.basket, x); });
+    var ingS = Math.max(0, (ok.length - 0.5 * wrong.length) / need.length);
+    var real = g.seq.filter(function (c) { return c !== TRAP; });
+    var stepS = lcs(real, [0, 1, 2, 3, 4, 5, 6]) / NSTEP;
+    var vOk = 0, vBad = [];
+    g.seq.forEach(function (c) { if (c === TRAP) return; if (g.verbs[c] === 0) vOk++; else vBad.push(c); });
+    var verbS = vOk / NSTEP;
+    var q = g.cook && g.cook.q.length ? g.cook.q : [0];
+    var cookS = q.reduce(function (s, x) { return s + x; }, 0) / q.length;
+    var total = Math.round(100 * (0.3 * ingS + 0.3 * stepS + 0.25 * verbS + 0.15 * cookS));
+    var posOk = g.seq.map(function (c, k) { return c === k; });
+    return { total: total, stars: total >= 90 ? 3 : total >= 70 ? 2 : total >= 50 ? 1 : 0,
+      ing: Math.round(ingS * 100), step: Math.round(stepS * 100), verb: Math.round(verbS * 100), cookp: Math.round(cookS * 100),
+      ok: ok, wrong: wrong, miss: miss, trap: inArr(g.seq, TRAP), posOk: posOk, vBad: vBad };
+  }
+  function pushCapped(a, x, n) { a.push(x); while (a.length > n) a.shift(); }
+
+  /* ctx: {g, claims, pid, now, pres}; mengubah ctx.g / ctx.claims. Mengembalikan pesan error atau "" */
+  function reduce(ctx, act) {
+    var g = ctx.g, pid = ctx.pid, now = ctx.now, t = act.t, me = member(g, pid);
+    if (t === "join") {
+      var nm = String(act.name || "").replace(/[<>]/g, "").trim().slice(0, 16);
+      if (!nm) return "Isi nama panggilan dulu";
+      if (me) { me.name = nm; return ""; }
+      if (g.members.length >= MAXM) return "Kelompok ini sudah penuh (maks " + MAXM + " orang)";
+      var used = g.members.map(function (m) { return m.c; }), c = 0;
+      while (inArr(used, c) && c < 9) c++;
+      g.members.push({ id: pid, name: nm, c: c });
+      if (g.stage === "lobby") g.order.push(pid);
+      return "";
+    }
+    if (!me) return "Kamu belum bergabung di kelompok ini";
+    if (t === "react") { pushCapped(g.fx, { p: pid, k: String(act.k).slice(0, 8), t: now, id: Math.floor(Math.random() * 1e9) }, 8); return ""; }
+    if (t === "ping") { pushCapped(g.pings, { p: pid, x: act.x, t: now }, 8); return ""; }
+    if (t === "takeover") {
+      var st = g.stage;
+      if (st === "cook") {
+        var ch = cookHolder(g);
+        if (ch === pid) return "";
+        if (ch && member(g, ch) && now - (ctx.pres[ch] || 0) < 20000) return "Temanmu masih aktif";
+        g.cook.as[g.cook.i] = pid; return "";
+      }
+      if (!ROLES[st]) return "Tidak ada peran di tahap ini";
+      var h = holder(g, st);
+      if (h === pid) return "";
+      if (h && member(g, h) && now - (ctx.pres[h] || 0) < 20000) return "Temanmu masih aktif";
+      g.ovr[st] = pid; return "";
+    }
+    if (t === "start") {
+      if (g.stage !== "lobby") return "";
+      if (g.members.length < 2) return "Minimal 2 anggota untuk mulai";
+      g.order = shuffle(g.members.map(function (m) { return m.id; }));
+      g.stage = "menu"; g.t0 = now; g.tS = now; return "";
+    }
+    if (t === "vote") {
+      if (g.stage !== "menu") return "";
+      if (!DMAP[act.d]) return "Masakan tidak dikenal";
+      if (ctx.claims[act.d] && ctx.claims[act.d] !== g.gid) return "Masakan itu sudah dipilih kelompok lain";
+      g.votes[pid] = act.d; return "";
+    }
+    if (t === "pick") {
+      if (g.stage !== "menu") return "";
+      if (holder(g, "menu") !== pid) return "Hanya Chef yang bisa memutuskan";
+      var d = DMAP[act.d];
+      if (!d) return "Masakan tidak dikenal";
+      if (ctx.claims[act.d] && ctx.claims[act.d] !== g.gid) return "Yah, masakan itu baru saja dipilih kelompok lain!";
+      ctx.claims[act.d] = g.gid; g.dish = act.d;
+      g.market = shuffle(d.ing.map(function (x) { return x[0]; }).concat(d.dis));
+      g.stage = "market"; g.tS = now; return "";
+    }
+    if (t === "toggle") {
+      if (g.stage !== "market") return "";
+      if (holder(g, "market") !== pid) return "Hanya Pembeli yang bisa belanja";
+      if (!inArr(g.market, act.x)) return "";
+      var k = g.basket.indexOf(act.x);
+      if (k >= 0) g.basket.splice(k, 1);
+      else { if (g.basket.length >= 12) return "Keranjang penuh"; g.basket.push(act.x); }
+      return "";
+    }
+    if (t === "doneMarket") {
+      if (g.stage !== "market" || holder(g, "market") !== pid) return "";
+      if (!g.basket.length) return "Keranjang masih kosong";
+      g.cards = shuffle([0, 1, 2, 3, 4, 5, 6, 7]);
+      g.vo = {}; for (var c2 = 0; c2 <= 7; c2++) g.vo[c2] = shuffle([0, 1, 2]);
+      g.stage = "steps"; g.tS = now; return "";
+    }
+    if (t === "place") {
+      if (g.stage !== "steps" || holder(g, "steps") !== pid) return "";
+      if (!inArr(g.cards, act.c) || inArr(g.seq, act.c)) return "";
+      if (g.seq.length >= NSTEP) return "Semua slot sudah terisi";
+      g.seq.push(act.c); return "";
+    }
+    if (t === "unplace") {
+      if (g.stage !== "steps" || holder(g, "steps") !== pid) return "";
+      var u = g.seq.indexOf(act.c); if (u >= 0) g.seq.splice(u, 1); return "";
+    }
+    if (t === "doneSteps") {
+      if (g.stage !== "steps" || holder(g, "steps") !== pid) return "";
+      if (g.seq.length !== NSTEP) return "Isi ketujuh langkah dulu";
+      g.stage = "check"; g.tS = now; return "";
+    }
+    if (t === "verb") {
+      if (g.stage !== "check" || holder(g, "check") !== pid) return "";
+      if (!inArr(g.seq, act.c) || [0, 1, 2].indexOf(act.o) < 0) return "";
+      g.verbs[act.c] = act.o; return "";
+    }
+    if (t === "rm") {
+      if (g.stage !== "check" || holder(g, "check") !== pid) return "";
+      var r = g.basket.indexOf(act.x); if (r < 0) return "";
+      g.basket.splice(r, 1); g.removed.push(act.x); return "";
+    }
+    if (t === "unrm") {
+      if (g.stage !== "check" || holder(g, "check") !== pid) return "";
+      var r2 = g.removed.indexOf(act.x); if (r2 < 0) return "";
+      g.removed.splice(r2, 1); g.basket.push(act.x); return "";
+    }
+    if (t === "doneCheck") {
+      if (g.stage !== "check" || holder(g, "check") !== pid) return "";
+      for (var s = 0; s < g.seq.length; s++) if (g.verbs[g.seq[s]] === undefined) return "Pilih bentuk kata kerja di semua langkah";
+      var ids = g.order.slice();
+      g.members.forEach(function (m) { if (!inArr(ids, m.id)) ids.push(m.id); });
+      g.cook = { i: 0, as: g.seq.map(function (_, k) { return ids[k % ids.length]; }), q: [] };
+      g.stage = "cook"; g.tS = now; return "";
+    }
+    if (t === "cook") {
+      if (g.stage !== "cook" || cookHolder(g) !== pid) return "";
+      if (act.i !== g.cook.i) return "";
+      var qq = Math.max(0, Math.min(1, Number(act.q) || 0));
+      g.cook.q.push(Math.round(qq * 100) / 100); g.cook.i++;
+      if (g.cook.i >= g.seq.length) { g.res = score(g); g.stage = "result"; g.tEnd = now; g.tS = now; }
+      return "";
+    }
+    return "Aksi tidak dikenal";
+  }
+  function optimistic(t) { return ["react", "ping", "vote", "toggle", "place", "unplace", "verb", "rm", "unrm"].indexOf(t) >= 0; }
+  function normClass(s) { return String(s || "").toUpperCase().replace(/[^A-Z0-9-]/g, "").slice(0, 12); }
+  function fullText(d) {
+    return d.steps.map(function (s) {
+      var v = VERB[s.v][0], i = s.t.indexOf("___");
+      if (i === 0) v = v.charAt(0).toUpperCase() + v.slice(1);
+      return s.t.replace("___", v);
+    });
+  }
+  return { CAT: CAT, VERB: VERB, DISHES: DISHES, DMAP: DMAP, GEST: GEST, ROLES: ROLES, ROLE_STAGE: ROLE_STAGE, STAGES: STAGES,
+    NSTEP: NSTEP, TRAP: TRAP, MAXM: MAXM, newGroup: newGroup, holder: holder, cookHolder: cookHolder, member: member,
+    reduce: reduce, score: score, optimistic: optimistic, normClass: normClass, stepOf: stepOf, fullText: fullText, lcs: lcs };
+})();
+
+/* ===== ART: ikon bahan, hidangan, maskot (SVG orisinal) ===== */
+var ART = (function () {
+  var O = 'stroke="#3A2A1E" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"';
+  function sv(vb, body) { return '<svg viewBox="' + vb + '" xmlns="http://www.w3.org/2000/svg">' + body + '</svg>'; }
+  var I = {
+    farine: '<path d="M18 16h28l4 40H14z" fill="#F4E6CC" ' + O + '/><path d="M18 16l3-6h22l3 6" fill="#E9D3AA" ' + O + '/><path d="M32 26v22M32 30l-5-4M32 30l5-4M32 37l-5-4M32 37l5-4M32 44l-5-4M32 44l5-4" fill="none" stroke="#C89B3C" stroke-width="2.4" stroke-linecap="round"/>',
+    oeufs: '<path d="M8 40h48l-4 14H12z" fill="#C9A77A" ' + O + '/><ellipse cx="20" cy="34" rx="8" ry="10" fill="#FFF8EE" ' + O + '/><ellipse cx="32" cy="32" rx="8" ry="10" fill="#F6E1C3" ' + O + '/><ellipse cx="44" cy="34" rx="8" ry="10" fill="#FFF8EE" ' + O + '/>',
+    lait: '<path d="M20 22h24v34H20z" fill="#FFFFFF" ' + O + '/><path d="M20 22l6-10h12l6 10" fill="#7FC4F0" ' + O + '/><rect x="27" y="7" width="10" height="5" fill="#2F7FC1" ' + O + '/><path d="M20 38h24v10H20z" fill="#7FC4F0"/><path d="M26 30c3-3 9-3 12 0" fill="none" stroke="#2F7FC1" stroke-width="2.4" stroke-linecap="round"/>',
+    sucre: '<rect x="12" y="34" width="14" height="14" rx="2" fill="#FFFFFF" ' + O + '/><rect x="26" y="34" width="14" height="14" rx="2" fill="#F6F1FF" ' + O + '/><rect x="40" y="34" width="14" height="14" rx="2" fill="#FFFFFF" ' + O + '/><rect x="19" y="20" width="14" height="14" rx="2" fill="#F6F1FF" ' + O + '/><rect x="33" y="20" width="14" height="14" rx="2" fill="#FFFFFF" ' + O + '/><circle cx="26" cy="27" r="1.3" fill="#B9A7E8"/><circle cx="47" cy="41" r="1.3" fill="#B9A7E8"/>',
+    beurre: '<path d="M8 46l10-8h38l-8 8z" fill="#E7E2D6" ' + O + '/><path d="M16 28h30v12H16z" fill="#FFE17A" ' + O + '/><path d="M16 28l6-6h30l-6 6z" fill="#FFEFA8" ' + O + '/><path d="M46 28l6-6v12l-6 6z" fill="#F2C94C" ' + O + '/>',
+    sel: '<path d="M22 24h20l3 32H19z" fill="#FFFFFF" ' + O + '/><path d="M22 24c0-8 20-8 20 0" fill="#4F8FD8" ' + O + '/><circle cx="28" cy="17" r="1.4" fill="#3A2A1E"/><circle cx="32" cy="15" r="1.4" fill="#3A2A1E"/><circle cx="36" cy="17" r="1.4" fill="#3A2A1E"/><text x="32" y="47" text-anchor="middle" font-size="13" font-weight="800" font-family="sans-serif" fill="#4F8FD8">S</text>',
+    fromage: '<path d="M8 44l40-22 8 8v16z" fill="#FFD24A" ' + O + '/><path d="M8 44h48v8H8z" fill="#F2B530" ' + O + '/><circle cx="30" cy="38" r="3" fill="#E9A920"/><circle cx="44" cy="36" r="2.4" fill="#E9A920"/><circle cx="20" cy="48" r="2" fill="#D9961A"/>',
+    poivre: '<rect x="24" y="22" width="16" height="34" rx="5" fill="#4A3426" ' + O + '/><rect x="26" y="12" width="12" height="10" rx="3" fill="#8C6A52" ' + O + '/><circle cx="32" cy="8" r="3" fill="#8C6A52" ' + O + '/><path d="M27 34h10M27 42h10" stroke="#8C6A52" stroke-width="2"/>',
+    riz: '<path d="M10 34h44c0 12-10 20-22 20S10 46 10 34z" fill="#E86A5C" ' + O + '/><path d="M12 34c2-12 38-12 40 0z" fill="#FFFFFF" ' + O + '/><path d="M22 28l3 1M30 25l3 1M38 28l3 1M26 31l3 1M35 31l3 1" stroke="#CFC6B8" stroke-width="2" stroke-linecap="round"/><path d="M20 44c8 3 16 3 24 0" fill="none" stroke="#FFFFFF" stroke-width="2"/>',
+    ail: '<path d="M32 12c-2 6-16 14-16 28 0 10 7 16 16 16s16-6 16-16c0-14-14-22-16-28z" fill="#FAF4EA" ' + O + '/><path d="M32 22v32M24 30c-2 8-1 18 4 24M40 30c2 8 1 18-4 24" fill="none" stroke="#D8C9B3" stroke-width="2"/><path d="M28 56h8" stroke="#B9A890" stroke-width="3" stroke-linecap="round"/>',
+    oignon: '<path d="M32 10c-1 5-20 14-20 28 0 10 9 18 20 18s20-8 20-18c0-14-19-23-20-28z" fill="#B14E8E" ' + O + '/><path d="M32 18c-6 8-10 16-10 24M32 18c6 8 10 16 10 24" fill="none" stroke="#E7A5CF" stroke-width="2.2"/><path d="M30 10l2-5 2 5" fill="none" stroke="#6E9E3A" stroke-width="2.4"/>',
+    kecap: '<path d="M26 8h12v10l6 8v30H20V26l6-8z" fill="#3B2A22" ' + O + '/><rect x="25" y="4" width="14" height="6" rx="2" fill="#D23A2C" ' + O + '/><rect x="22" y="32" width="20" height="16" rx="3" fill="#F6C343"/><path d="M27 40c3-4 7-4 10 0" fill="none" stroke="#3B2A22" stroke-width="2.4" stroke-linecap="round"/>',
+    huile: '<path d="M27 6h10v10l7 10v30H20V26l7-10z" fill="#FFD84D" fill-opacity=".9" ' + O + '/><rect x="26" y="3" width="12" height="6" rx="2" fill="#3FA34D" ' + O + '/><path d="M22 34h20" stroke="#E7B41F" stroke-width="2"/><circle cx="32" cy="44" r="5" fill="#3FA34D"/>',
+    piment: '<path d="M18 22c12 2 26 10 30 30-10-4-24-10-32-26z" fill="#E33B2E" ' + O + '/><path d="M16 26c-4-4-4-10 2-12 2 2 2 6 0 8" fill="#3FA34D" ' + O + '/><path d="M24 26c8 3 15 9 19 18" fill="none" stroke="#FF8A7E" stroke-width="2.4" stroke-linecap="round"/>',
+    banane: '<path d="M12 22c4 22 24 32 42 22-3-4-6-4-8-3-14 6-28-2-30-21z" fill="#FFD43B" ' + O + '/><path d="M12 22l-2-6 5-1 1 7" fill="#7A5A2A" ' + O + '/><path d="M20 30c6 10 16 14 26 12" fill="none" stroke="#E6B421" stroke-width="2.2"/>',
+    pomme: '<path d="M32 20c-6-5-20-4-20 12 0 14 10 24 20 22 10 2 20-8 20-22 0-16-14-17-20-12z" fill="#E7473C" ' + O + '/><path d="M32 20c0-6 2-10 5-12" fill="none" ' + O + '/><path d="M36 14c4-5 10-4 12-2-4 4-8 4-12 2z" fill="#4CAF50" ' + O + '/><path d="M20 30c1-4 4-6 7-6" fill="none" stroke="#FF9A8F" stroke-width="2.4" stroke-linecap="round"/>',
+    fraise: '<path d="M32 56c-12-8-20-18-18-28 2-6 10-8 18-6 8-2 16 0 18 6 2 10-6 20-18 28z" fill="#E8364B" ' + O + '/><path d="M20 20l6 4 6-8 6 8 6-4-2 6H22z" fill="#3FA34D" ' + O + '/><g fill="#FFE07A"><circle cx="24" cy="32" r="1.4"/><circle cx="32" cy="30" r="1.4"/><circle cx="40" cy="32" r="1.4"/><circle cx="28" cy="40" r="1.4"/><circle cx="36" cy="40" r="1.4"/><circle cx="32" cy="48" r="1.4"/></g>',
+    orange: '<circle cx="32" cy="36" r="19" fill="#FF9F1C" ' + O + '/><path d="M32 17c2-5 8-7 12-5-2 5-8 6-12 5z" fill="#4CAF50" ' + O + '/><g fill="#E8830A"><circle cx="26" cy="32" r="1.2"/><circle cx="38" cy="30" r="1.2"/><circle cx="34" cy="42" r="1.2"/><circle cx="24" cy="42" r="1.2"/></g>',
+    citron: '<path d="M10 36c4-12 14-18 22-18s18 6 22 18c-4 12-14 18-22 18S14 48 10 36z" fill="#FFE23B" ' + O + '/><path d="M8 36h4M52 36h4" ' + O + '/><path d="M20 32c3-5 8-7 12-7" fill="none" stroke="#FFF6A8" stroke-width="2.6" stroke-linecap="round"/>',
+    miel: '<path d="M16 24h32v26c0 4-3 6-6 6H22c-3 0-6-2-6-6z" fill="#F3A712" ' + O + '/><rect x="14" y="16" width="36" height="8" rx="3" fill="#B5651D" ' + O + '/><path d="M16 30c4 4 8 0 12 4s8 0 12 4 6 0 8-2" fill="none" stroke="#FFD166" stroke-width="2.4"/><path d="M26 40l6-4 6 4v6l-6 4-6-4z" fill="#FFD166" stroke="#B5651D" stroke-width="1.8"/>',
+    carotte: '<path d="M42 18L14 52c-1 1 0 3 2 2l32-26z" fill="#FF7A1A" ' + O + '/><path d="M42 18c2-6 0-10-2-12M44 20c6-2 10 0 12 2M43 19c4-4 8-6 12-5" fill="none" stroke="#3FA34D" stroke-width="3" stroke-linecap="round"/><path d="M26 36l4 3M20 44l4 3M33 28l4 3" stroke="#D85E0A" stroke-width="2" stroke-linecap="round"/>',
+    pdt: '<path d="M12 34c0-12 12-18 24-16s18 10 16 20-12 16-24 14-16-8-16-18z" fill="#C8955A" ' + O + '/><g fill="#8A5E2E"><circle cx="24" cy="30" r="1.6"/><circle cx="38" cy="28" r="1.6"/><circle cx="42" cy="40" r="1.6"/><circle cx="28" cy="42" r="1.6"/></g>',
+    tomate: '<circle cx="32" cy="36" r="19" fill="#E53935" ' + O + '/><path d="M22 20l6 4 4-8 4 8 6-4-2 7H24z" fill="#3FA34D" ' + O + '/><path d="M20 32c2-5 6-7 10-7" fill="none" stroke="#FF8A80" stroke-width="2.6" stroke-linecap="round"/>',
+    eau: '<path d="M26 6h12v8c6 4 8 8 8 14v26c0 2-2 4-4 4H22c-2 0-4-2-4-4V28c0-6 2-10 8-14z" fill="#CFEFFF" ' + O + '/><rect x="25" y="3" width="14" height="6" rx="2" fill="#2F7FC1" ' + O + '/><path d="M18 34h28v14H18z" fill="#64B5F6"/><path d="M32 38c-3 4-3 7 0 7s3-3 0-7z" fill="#FFFFFF"/>',
+    yaourt: '<path d="M16 22h32l-4 34H20z" fill="#FFFFFF" ' + O + '/><rect x="14" y="16" width="36" height="7" rx="2" fill="#E8475F" ' + O + '/><path d="M18 34h28l-1 10H19z" fill="#FFC1CC"/><circle cx="32" cy="39" r="3" fill="#E8475F"/>',
+    levure: '<path d="M16 14h32v38H16z" fill="#E94F37" ' + O + '/><path d="M16 14l4 4 4-4 4 4 4-4 4 4 4-4 4 4 4-4" fill="none" stroke="#FFFFFF" stroke-width="2"/><path d="M24 30c4-6 12-6 16 0-4 6-12 6-16 0z" fill="#FFFFFF"/><path d="M24 42h16" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>',
+    glacons: '<path d="M12 28l12-6 12 6v14l-12 6-12-6z" fill="#D9F3FF" ' + O + '/><path d="M30 22l12-6 12 6v14l-12 6-12-6z" fill="#BFE8FF" ' + O + '/><path d="M22 40l10-5 10 5v12l-10 5-10-5z" fill="#E8F8FF" ' + O + '/><path d="M16 30l4 2M34 24l4 2M26 42l4 2" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round"/>',
+    pates: '<path d="M10 40c0-8 10-12 22-12s22 4 22 12c0 8-10 14-22 14S10 48 10 40z" fill="#FFFFFF" ' + O + '/><path d="M18 40c4-6 8 6 12 0s8 6 12 0 6 4 6 4M16 44c5-5 9 5 14 0s9 5 14 0" fill="none" stroke="#F2C14E" stroke-width="3" stroke-linecap="round"/><path d="M20 18l6 8M28 14l4 10M38 14l-2 10M46 18l-6 8" stroke="#F2C14E" stroke-width="3" stroke-linecap="round"/>',
+    chocolat: '<rect x="14" y="12" width="36" height="42" rx="4" fill="#6B3E26" ' + O + '/><path d="M14 26h36M14 40h36M32 12v42" stroke="#4E2A17" stroke-width="2.4"/><path d="M14 44h36v10H14z" fill="#3D7BC9" ' + O + '/>'
+  };
+  function item(id) { return sv("0 0 64 64", I[id] || '<circle cx="32" cy="32" r="18" fill="#ccc"/>'); }
+
+  /* hidangan: viewBox 0 0 160 110 */
+  var plate = '<ellipse cx="80" cy="82" rx="70" ry="20" fill="#E9EEF3" ' + O + '/><ellipse cx="80" cy="79" rx="52" ry="13" fill="#FFFFFF"/>';
+  var bowl = function (fill) { return '<path d="M26 54h108c0 26-24 44-54 44S26 80 26 54z" fill="' + fill + '" ' + O + '/>'; };
+  var D = {
+    crepes: plate + '<ellipse cx="80" cy="74" rx="44" ry="10" fill="#E9B65C" ' + O + '/><ellipse cx="80" cy="67" rx="44" ry="10" fill="#F2C873" ' + O + '/><ellipse cx="80" cy="60" rx="44" ry="10" fill="#F6D58C" ' + O + '/><path d="M60 58c6 4 14 4 20 0s14-4 20 0" fill="none" stroke="#B5432E" stroke-width="4" stroke-linecap="round"/><circle cx="70" cy="54" r="5" fill="#E8364B" ' + O + '/><circle cx="92" cy="56" r="4" fill="#E8364B" ' + O + '/>',
+    omelette: plate + '<path d="M34 74c0-24 92-24 92 0z" fill="#FFD54A" ' + O + '/><path d="M50 64c6-4 10 2 16-2M86 62c6-4 10 2 14-1" fill="none" stroke="#F2A900" stroke-width="3" stroke-linecap="round"/><path d="M62 74l8-8 6 8M90 74l6-6 6 6" fill="#FFF3B0" stroke="#F2A900" stroke-width="2"/><circle cx="104" cy="58" r="3" fill="#4CAF50"/>',
+    nasigoreng: plate + '<path d="M36 76c0-30 88-30 88 0z" fill="#B86A2E" ' + O + '/><g fill="#8E4B1C"><circle cx="52" cy="66" r="2"/><circle cx="68" cy="60" r="2"/><circle cx="92" cy="62" r="2"/><circle cx="108" cy="70" r="2"/></g><ellipse cx="80" cy="52" rx="20" ry="9" fill="#FFFFFF" ' + O + '/><circle cx="80" cy="51" r="6" fill="#FFB300" stroke="#E08A00" stroke-width="2"/><path d="M112 76c6-2 14 0 18 4-8 2-14 2-18-4z" fill="#F6E7C8" ' + O + '/><circle cx="58" cy="72" r="3" fill="#4CAF50"/><circle cx="100" cy="56" r="2.4" fill="#E53935"/>',
+    salade: bowl("#9ED8F5") + '<circle cx="54" cy="54" r="10" fill="#E8364B" ' + O + '/><circle cx="74" cy="50" r="10" fill="#FFD43B" ' + O + '/><circle cx="94" cy="54" r="10" fill="#FF9F1C" ' + O + '/><circle cx="110" cy="56" r="8" fill="#7CB342" ' + O + '/><circle cx="64" cy="58" r="7" fill="#FFF3C4" ' + O + '/><circle cx="86" cy="60" r="7" fill="#E7473C" ' + O + '/><path d="M74 40c2-6 8-8 12-6-2 6-8 7-12 6z" fill="#4CAF50" ' + O + '/>',
+    soupe: bowl("#F2F2F2") + '<ellipse cx="80" cy="56" rx="52" ry="10" fill="#F08A2C" ' + O + '/><rect x="56" y="50" width="8" height="7" rx="2" fill="#FFB74D" stroke="#C25E00" stroke-width="1.6"/><rect x="84" y="52" width="8" height="7" rx="2" fill="#F5E1A4" stroke="#B98A2E" stroke-width="1.6"/><circle cx="104" cy="55" r="4" fill="#E53935"/><circle cx="70" cy="57" r="2.4" fill="#4CAF50"/><path d="M66 36c-4-6 4-8 0-14M80 34c-4-6 4-8 0-14M94 36c-4-6 4-8 0-14" fill="none" stroke="#C9C9C9" stroke-width="3" stroke-linecap="round" class="steam"/>',
+    gateau: plate + '<path d="M40 76V48c0-6 6-10 12-10h56c6 0 12 4 12 10v28z" fill="#E9B05C" ' + O + '/><path d="M40 52c10 6 20-6 30 0s20-6 30 0 14-4 20 0V46c0-5-5-8-12-8H52c-7 0-12 3-12 8z" fill="#FFF3E0" ' + O + '/><path d="M60 62v8M80 60v10M100 62v8" stroke="#D08F3A" stroke-width="2.4" stroke-linecap="round"/>',
+    pisang: plate + '<path d="M40 70c10-18 36-20 46-6-8 10-34 14-46 6z" fill="#E0A030" ' + O + '/><path d="M74 72c10-18 36-20 46-6-8 10-34 14-46 6z" fill="#D9932A" ' + O + '/><path d="M54 58c10-14 30-14 38-4-8 8-28 10-38 4z" fill="#EBB040" ' + O + '/><g fill="#B5701B"><circle cx="56" cy="66" r="1.6"/><circle cx="90" cy="68" r="1.6"/><circle cx="72" cy="56" r="1.6"/><circle cx="104" cy="64" r="1.6"/></g>',
+    smoothie: '<ellipse cx="80" cy="98" rx="40" ry="8" fill="#E9EEF3" ' + O + '/><path d="M56 18h48l-6 78H62z" fill="#F7A1B8" ' + O + '/><path d="M56 18h48l-1 14H57z" fill="#FFFFFF" fill-opacity=".7"/><path d="M90 6l-6 40" stroke="#3FA9F5" stroke-width="5" stroke-linecap="round"/><circle cx="104" cy="22" r="9" fill="#E8364B" ' + O + '/><path d="M100 14l4 3 4-3" fill="none" stroke="#3FA34D" stroke-width="2.4"/>',
+    pates: plate + '<path d="M38 74c0-22 84-22 84 0z" fill="#F2C14E" ' + O + '/><path d="M46 70c8-10 14 6 22-4s14 6 22-4 12 6 20-2" fill="none" stroke="#E0A92E" stroke-width="3" stroke-linecap="round"/><path d="M56 58c8-8 40-8 48 0-6 8-40 8-48 0z" fill="#D63A2F" ' + O + '/><g fill="#FFF8E1"><circle cx="70" cy="56" r="2"/><circle cx="84" cy="54" r="2"/><circle cx="94" cy="58" r="2"/></g><path d="M80 48c2-4 6-5 9-4-2 4-6 5-9 4z" fill="#4CAF50"/>',
+    mousse: '<ellipse cx="80" cy="96" rx="44" ry="9" fill="#E9EEF3" ' + O + '/><path d="M48 40h64l-8 52H56z" fill="#FFFFFF" fill-opacity=".6" ' + O + '/><path d="M52 52h56l-6 38H58z" fill="#6B3E26"/><path d="M46 40c6-12 14-6 20-12 6 8 14-2 20 4 8-6 14 0 20 8z" fill="#8D5638" ' + O + '/><circle cx="82" cy="24" r="6" fill="#E8364B" ' + O + '/><path d="M82 18c0-4 3-6 6-6" fill="none" ' + O + '/>'
+  };
+  function dish(id, cls) { return '<svg class="dish ' + (cls || "") + '" viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg"><g class="dg">' + (D[id] || plate) + '</g></svg>'; }
+
+  /* maskot orisinal: Chef Marcel */
+  function chef(mood) {
+    var mouth = mood === "sad" ? '<path d="M54 78c4-5 12-5 16 0" fill="none" ' + O + '/>' : mood === "wow" ? '<ellipse cx="62" cy="78" rx="6" ry="7" fill="#7A2E1E" ' + O + '/>' : '<path d="M52 74c4 8 16 8 20 0z" fill="#7A2E1E" ' + O + '/>';
+    return sv("0 0 124 130", '<path d="M30 40c-12 0-16-16-4-22 2-12 18-16 26-8 6-10 26-10 30 2 12-4 22 8 14 20 6 8 0 16-8 16H34z" fill="#FFFFFF" ' + O + '/><rect x="34" y="40" width="56" height="12" fill="#FFFFFF" ' + O + '/>' +
+      '<circle cx="62" cy="72" r="26" fill="#FFD3B0" ' + O + '/><circle cx="52" cy="66" r="3.4" fill="#3A2A1E"/><circle cx="72" cy="66" r="3.4" fill="#3A2A1E"/><circle cx="44" cy="76" r="4" fill="#FF9E8A" opacity=".7"/><circle cx="80" cy="76" r="4" fill="#FF9E8A" opacity=".7"/>' +
+      '<path d="M44 70c6-6 12-2 18 0 6-2 12-6 18 0-6 6-12 4-18 2-6 2-12 4-18-2z" fill="#6B4226" ' + O + '/>' + mouth +
+      '<path d="M30 130c0-22 14-32 32-32s32 10 32 32z" fill="#FFFFFF" ' + O + '/><path d="M50 100l12 12 12-12" fill="#E8503A" ' + O + '/>');
+  }
+  function hat(c) {
+    var col = ["#E8503A", "#2BB38A", "#3D7BC9", "#F5B82E", "#9B59B6", "#FF7A9E", "#14A3B8", "#8D6E63", "#5C6BC0"][c % 9];
+    return sv("0 0 48 48", '<circle cx="24" cy="28" r="17" fill="' + col + '" ' + O + '/><path d="M12 16c-6-1-6-9 0-10 2-6 10-6 12-2 4-4 12-2 12 4 6 0 6 8 0 8z" fill="#FFFFFF" ' + O + '/><rect x="13" y="15" width="22" height="5" fill="#FFFFFF" ' + O + '/>');
+  }
+  /* alat masak untuk animasi */
+  function tool(a) {
+    if (a === "cut") return '<g><rect x="30" y="70" width="140" height="22" rx="6" fill="#D9A066" ' + O + '/><g class="knife"><path d="M120 20l40 10-40 26z" fill="#DDE3EA" ' + O + '/><rect x="150" y="22" width="34" height="10" rx="4" transform="rotate(14 150 22)" fill="#3A2A1E"/></g><g class="chunks"><rect x="56" y="58" width="12" height="12" rx="3" fill="#FF7A1A" ' + O + '/><rect x="74" y="58" width="12" height="12" rx="3" fill="#7CB342" ' + O + '/><rect x="92" y="58" width="12" height="12" rx="3" fill="#E53935" ' + O + '/></g></g>';
+    if (a === "heat" || a === "wait") return '<g><rect x="40" y="84" width="120" height="14" rx="4" fill="#5D6D7E" ' + O + '/><g class="flame"><path d="M70 84c-6-8 2-12 0-20 8 6 10 12 4 20z" fill="#FF7A1A"/><path d="M98 84c-6-8 2-14 0-22 8 6 10 14 4 22z" fill="#FFB300"/><path d="M126 84c-6-8 2-12 0-20 8 6 10 12 4 20z" fill="#FF7A1A"/></g><path d="M44 54h112c0 14-10 22-24 22H68c-14 0-24-8-24-22z" fill="#37474F" ' + O + '/><rect x="156" y="52" width="40" height="8" rx="4" fill="#3A2A1E"/><path d="M70 52c8-6 52-6 60 0" fill="#F2C873" ' + O + '/><g class="steam"><path d="M80 40c-4-6 4-8 0-14M100 38c-4-6 4-8 0-14M120 40c-4-6 4-8 0-14" fill="none" stroke="#B8C2CC" stroke-width="3" stroke-linecap="round"/></g>' + (a === "wait" ? '<g class="clock"><circle cx="170" cy="22" r="16" fill="#FFFFFF" ' + O + '/><path d="M170 22V12M170 22l7 4" ' + O + '/></g>' : '') + '</g>';
+    if (a === "pour") return '<g><path d="M50 60h100c0 22-20 34-50 34S50 82 50 60z" fill="#9ED8F5" ' + O + '/><g class="jug"><path d="M120 6h34v34c0 6-4 10-10 10h-14c-6 0-10-4-10-10z" fill="#FFFFFF" ' + O + '/><path d="M120 10l-10 6" ' + O + '/></g><path class="stream" d="M108 22c-4 12-6 24-6 40" fill="none" stroke="#F6D58C" stroke-width="6" stroke-linecap="round"/></g>';
+    if (a === "serve") return '<g><ellipse cx="100" cy="82" rx="70" ry="16" fill="#E9EEF3" ' + O + '/><g class="cloche"><path d="M44 78c0-34 112-34 112 0z" fill="#D7DEE6" ' + O + '/><circle cx="100" cy="40" r="6" fill="#B0BAC5" ' + O + '/></g><g class="spark"><path d="M30 30l4 8 8 4-8 4-4 8-4-8-8-4 8-4z" fill="#FFD43B"/><path d="M168 24l3 6 6 3-6 3-3 6-3-6-6-3 6-3z" fill="#FFD43B"/></g></g>';
+    /* mix & add */
+    return '<g><path d="M44 50h112c0 28-24 44-56 44S44 78 44 50z" fill="#F3F6F9" ' + O + '/><ellipse cx="100" cy="52" rx="54" ry="10" fill="#F6E3B4" ' + O + '/><g class="whisk"><path d="M100 50c-10-20-6-34 0-40 6 6 10 20 0 40z" fill="none" stroke="#9AA5B1" stroke-width="3"/><path d="M100 50c-4-16-2-30 0-40" fill="none" stroke="#9AA5B1" stroke-width="3"/><rect x="96" y="-8" width="8" height="22" rx="4" fill="#E8503A" ' + O + '/></g>' + (a === "add" ? '<g class="drop"><ellipse cx="60" cy="10" rx="9" ry="11" fill="#FFF8EE" ' + O + '/></g>' : '') + '</g>';
+  }
+  return { item: item, dish: dish, chef: chef, hat: hat, tool: tool, sv: sv };
+})();
+
+/* ===== APP (HP siswa & panel guru) ===== */
+(function () {
+  "use strict";
+  var C = CORE, $ = function (s) { return document.querySelector(s); };
+  var APP = $("#app");
+  /* ---- parameter & penyimpanan ---- */
+  var Q = {}; try { Object.keys(PARAMS || {}).forEach(function (k) { Q[k] = PARAMS[k]; }); } catch (e) {}
+  try { location.search.replace(/^\?/, "").split("&").forEach(function (p) { if (!p) return; var kv = p.split("="); if (Q[kv[0]] == null) Q[kv[0]] = decodeURIComponent(kv[1] || ""); }); } catch (e) {}
+  function lsGet(k) { try { return localStorage.getItem("bcl_" + k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem("bcl_" + k, v); } catch (e) {} }
+  var ME = { pid: lsGet("pid"), name: lsGet("name") || "", cls: C.normClass(Q.kelas || lsGet("cls") || ""), gid: parseInt(lsGet("gid") || "0", 10) || 0, joined: false };
+  if (!ME.pid) { ME.pid = (Math.random().toString(36).slice(2) + Date.now().toString(36)).replace(/[^a-z0-9]/g, "").slice(0, 16); lsSet("pid", ME.pid); }
+  var ST = { g: null, claims: {}, pres: {}, now: 0, recv: 0, sver: -1, born: null };
+  var pend = 0, polling = false, timer = null, lastKey = "", prevG = null, seenFx = {}, GS = null, mode = Q.guru ? "guru" : "play";
+
+  /* ---- server ---- */
+  function call(fn, a) {
+    return new Promise(function (res, rej) {
+      if (window.google && google.script && google.script.run) {
+        google.script.run.withSuccessHandler(function (s) { try { res(JSON.parse(s)); } catch (e) { rej(e); } }).withFailureHandler(rej).rpc(fn, a);
+      } else {
+        fetch("rpc", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fn: fn, a: a }) })
+          .then(function (r) { return r.text(); }).then(function (t) { res(JSON.parse(t)); }).catch(rej);
+      }
+    });
+  }
+  function srvNow() { return ST.now + (Date.now() - ST.recv); }
+  function accept(r, fromPoll) {
+    if (!r || r.err) { if (r && r.err) toast(r.err); return false; }
+    if (r.msg) toast(r.msg);
+    var g = r.g, fresh = ST.born !== g.born;
+    if (fromPoll && pend > 0) return false;
+    if (!fresh && g.ver < ST.sver) return false;
+    if (ME.joined && !C.member(g, ME.pid)) { ME.joined = false; ST.g = null; ST.born = null; ST.sver = -1; lastKey = ""; toast("Kelompok direset guru. Silakan masuk lagi."); render(); return false; }
+    ST.sver = g.ver; ST.born = g.born; ST.g = g; ST.claims = r.claims || {}; ST.pres = r.pres || {}; ST.now = r.now; ST.recv = Date.now();
+    render(); return true;
+  }
+  function poll() {
+    if (mode !== "play" || !ME.joined || polling) return;
+    polling = true;
+    call("state", { cls: ME.cls, gid: ME.gid, pid: ME.pid }).then(function (r) { polling = false; accept(r, true); }).catch(function () { polling = false; });
+  }
+  function startPoll() { if (timer) clearInterval(timer); timer = setInterval(poll, 1700); poll(); }
+  function act(a) {
+    if (!ST.g) return;
+    if (C.optimistic(a.t)) {
+      var g2 = JSON.parse(JSON.stringify(ST.g)), cl = JSON.parse(JSON.stringify(ST.claims));
+      var m = C.reduce({ g: g2, claims: cl, pid: ME.pid, now: srvNow(), pres: ST.pres }, a);
+      if (m) { toast(m); return; }
+      ST.g = g2; render();
+    }
+    pend++;
+    call("act", { cls: ME.cls, gid: ME.gid, pid: ME.pid, act: a }).then(function (r) { pend--; accept(r, false); }).catch(function (e) { pend--; toast("Koneksi bermasalah, coba lagi"); });
+  }
+
+  /* ---- suara & suara bahasa Prancis ---- */
+  var AC = null;
+  function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} } if (AC && AC.state === "suspended") AC.resume(); return AC; }
+  function tone(f, d, type, vol, when) {
+    var a = ac(); if (!a) return; var t = a.currentTime + (when || 0), o = a.createOscillator(), g = a.createGain();
+    o.type = type || "sine"; o.frequency.setValueAtTime(f, t); g.gain.setValueAtTime(vol || 0.15, t); g.gain.exponentialRampToValueAtTime(0.001, t + d);
+    o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + d + 0.02);
+  }
+  var SFX = {
+    pop: function () { tone(660, 0.08, "triangle", 0.18); tone(990, 0.08, "triangle", 0.12, 0.05); },
+    coin: function () { tone(988, 0.08, "square", 0.08); tone(1319, 0.25, "square", 0.08, 0.08); },
+    tap: function () { tone(520 + Math.random() * 80, 0.05, "triangle", 0.12); },
+    ok: function () { [523, 659, 784].forEach(function (f, i) { tone(f, 0.16, "triangle", 0.14, i * 0.09); }); },
+    bad: function () { tone(220, 0.25, "sawtooth", 0.08); tone(180, 0.3, "sawtooth", 0.08, 0.12); },
+    fan: function () { [523, 659, 784, 1047, 784, 1047].forEach(function (f, i) { tone(f, 0.22, "triangle", 0.14, i * 0.12); }); },
+    sizzle: function () {
+      var a = ac(); if (!a) return; var n = a.sampleRate * 0.6, b = a.createBuffer(1, n, a.sampleRate), d = b.getChannelData(0);
+      for (var i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / n) * 0.25;
+      var s = a.createBufferSource(), f = a.createBiquadFilter(); f.type = "highpass"; f.frequency.value = 2500; s.buffer = b; s.connect(f); f.connect(a.destination); s.start();
+    }
+  };
+  function speak(t) {
+    try { var u = new SpeechSynthesisUtterance(t); u.lang = "fr-FR"; u.rate = 0.9; var v = speechSynthesis.getVoices().filter(function (x) { return /^fr/i.test(x.lang); })[0]; if (v) u.voice = v; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {}
+  }
+  var SPK = '<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#fff"/><path d="M16 8c2 2 2 6 0 8M18.5 5.5c3.5 3.5 3.5 9.5 0 13" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>';
+  var STAR = '<svg viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 .8-5.2 4.8 1.4 7L12 17.6 5.8 21.1l1.4-7L2 9.3l7-.8z" fill="#F5B82E" stroke="#D99A12" stroke-width="1.4" stroke-linejoin="round"/></svg>';
+
+  /* ---- util ---- */
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  var tt = null;
+  function toast(m) { var t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(function () { t.classList.remove("show"); }, 2600); }
+  function nameOf(pid) { var m = ST.g && C.member(ST.g, pid); return m ? m.name : "?"; }
+  function colorOf(pid) { var m = ST.g && C.member(ST.g, pid); return m ? m.c : 0; }
+  function online(pid) { return srvNow() - (ST.pres[pid] || 0) < 12000; }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function sentence(st, verbText, cls) {
+    var parts = st.t.split("___"), v = verbText;
+    if (st.t.indexOf("___") === 0 && v.indexOf("(") !== 0) v = cap(v);
+    return esc(parts[0]) + '<span class="' + cls + '">' + esc(v) + "</span>" + esc(parts[1]);
+  }
+  function plain(st, v) { var i = st.t.indexOf("___"); if (i === 0) v = cap(v); return st.t.replace("___", v); }
+  function confetti(n) {
+    var fx = $("#fx"), cols = ["#E8503A", "#2BB38A", "#F5B82E", "#3D7BC9", "#FF7A9E"];
+    for (var i = 0; i < (n || 70); i++) { var d = document.createElement("i"); d.className = "confetti"; d.style.left = Math.random() * 100 + "vw"; d.style.background = cols[i % 5]; d.style.animationDuration = 1.8 + Math.random() * 1.6 + "s"; d.style.animationDelay = Math.random() * 0.6 + "s"; fx.appendChild(d); (function (d) { setTimeout(function () { d.remove(); }, 4200); })(d); }
+  }
+  function floaty(k, who) {
+    var d = document.createElement("div"); d.className = "floaty"; d.style.left = 10 + Math.random() * 75 + "vw";
+    d.innerHTML = esc(k) + "<small>" + esc(who) + "</small>"; $("#fx").appendChild(d); setTimeout(function () { d.remove(); }, 2700);
+  }
+  function flyTo(srcEl, dstEl, html) {
+    if (!srcEl || !dstEl || !srcEl.getBoundingClientRect) return;
+    var a = srcEl.getBoundingClientRect(), b = dstEl.getBoundingClientRect(), d = document.createElement("div");
+    d.style.cssText = "position:fixed;z-index:45;pointer-events:none;width:" + a.width + "px;height:" + a.height + "px;left:" + a.left + "px;top:" + a.top + "px";
+    d.innerHTML = html; document.body.appendChild(d);
+    var dx = b.left + b.width / 2 - (a.left + a.width / 2), dy = b.top + b.height / 2 - (a.top + a.height / 2);
+    if (d.animate) d.animate([{ transform: "translate(0,0) scale(1)" }, { transform: "translate(" + dx * 0.5 + "px," + (dy * 0.5 - 80) + "px) scale(1.1)", offset: 0.5 }, { transform: "translate(" + dx + "px," + dy + "px) scale(.3)", opacity: 0.4 }], { duration: 700, easing: "ease-in" });
+    setTimeout(function () { d.remove(); }, 690);
+  }
+
+  /* ---- overlay tahap ---- */
+  var STAGE_INFO = {
+    menu: { t: "Étape 1 · Le Menu", ic: "dish", task: "Semua memberi suara. <b>Chef</b> memutuskan masakan kelompok. Cepat, sebelum dipilih kelompok lain!" },
+    market: { t: "Étape 2 · Le Marché", ic: "cart", task: "<b>Pembeli</b> mengambil bahan di pasar. Teman-teman membacakan <i>fiche recette</i> dalam bahasa Prancis!" },
+    steps: { t: "Étape 3 · La Recette", ic: "list", task: "<b>Asisten</b> menyusun 7 langkah. Hati-hati, ada 1 langkah jebakan!" },
+    check: { t: "Étape 4 · Le Contrôle", ic: "loupe", task: "<b>Pemeriksa</b> memilih bentuk impératif yang benar dan membuang bahan yang salah." },
+    cook: { t: "Étape 5 · En cuisine !", ic: "pan", task: "Semua ikut memasak! Tunggu giliranmu dan lakukan gerakannya." },
+    result: { t: "Le Verdict !", ic: "star", task: "Chef Marcel mencicipi masakan kalian…" }
+  };
+  function showOverlay(stage) {
+    var inf = STAGE_INFO[stage]; if (!inf) return;
+    var h = C.ROLES[stage] ? C.holder(ST.g, stage) : null;
+    var roleLine = h ? '<p style="font-size:18px;margin:10px 0 4px">' + C.ROLES[stage] + ': <b style="color:var(--tom)">' + esc(nameOf(h)) + (h === ME.pid ? " (kamu!)" : "") + "</b></p>" : "";
+    $("#ov").innerHTML = '<div class="box"><div class="chefimg">' + ART.chef(stage === "result" ? "wow" : "") + '</div><div class="big">' + inf.t + "</div>" + roleLine + '<p style="font-size:15px">' + inf.task + '</p><button class="btn y sm" data-a="closeov">Oke!</button></div>';
+    $("#ov").classList.add("show"); SFX.ok();
+    clearTimeout(showOverlay.t); showOverlay.t = setTimeout(function () { $("#ov").classList.remove("show"); }, 3800);
+  }
+
+  /* ---- diff → animasi ---- */
+  function diffFx(pg, g) {
+    if (!pg || pg.born !== g.born) { (g.fx || []).forEach(function (f) { seenFx[f.id] = 1; }); return; }
+    if (pg.stage !== g.stage) { showOverlay(g.stage); if (g.stage === "result") setTimeout(function () { SFX.fan(); }, 1800); }
+    (g.fx || []).forEach(function (f) { if (!seenFx[f.id]) { seenFx[f.id] = 1; if (f.p !== ME.pid) floaty(f.k, nameOf(f.p)); } });
+    if (g.stage === "market" && g.basket.length > pg.basket.length) {
+      var nx = g.basket.filter(function (x) { return pg.basket.indexOf(x) < 0; });
+      nx.forEach(function (x) { setTimeout(function () { flyTo(document.getElementById("it-" + x), $("#cart"), ART.item(x)); }, 30); });
+      SFX.coin();
+    }
+    if (g.stage === "cook" && pg.cook && g.cook && g.cook.i > pg.cook.i) { SFX.ok(); }
+    if (g.stage === "steps" && g.seq.length !== pg.seq.length) SFX.pop();
+  }
+
+  /* ---- render ---- */
+  function render() {
+    if (mode === "guru") return renderGuru();
+    if (!ME.joined || !ST.g) { $("#dock").classList.remove("show"); return renderJoin(); }
+    var g = ST.g;
+    diffFx(prevG, g); prevG = JSON.parse(JSON.stringify(g));
+    $("#dock").classList.toggle("show", g.stage !== "lobby");
+    var body = VIEWS[g.stage](g);
+    var key = g.stage + "|" + body;
+    if (GS && GS.active && g.stage === "cook" && g.cook && g.cook.i === GS.i) { renderTop(g); return; }
+    renderTop(g);
+    if (key !== lastKey) {
+      var first = lastKey.split("|")[0] !== g.stage;
+      lastKey = key;
+      var sy = window.scrollY;
+      $("#main").innerHTML = body;
+      if (first) { $("#main").classList.remove("enter"); void $("#main").offsetWidth; $("#main").classList.add("enter"); window.scrollTo(0, 0); }
+      else window.scrollTo(0, sy);
+      after(g, first);
+    }
+  }
+  function renderTop(g) {
+    var si = C.STAGES.indexOf(g.stage), role = myRole(g), el = srvNow() - g.t0, mm = g.t0 ? Math.floor(el / 60000) : 0, ss = g.t0 ? Math.floor(el / 1000) % 60 : 0;
+    if (g.stage === "result" && g.tEnd) { el = g.tEnd - g.t0; mm = Math.floor(el / 60000); ss = Math.floor(el / 1000) % 60; }
+    var actv = g.stage === "cook" ? C.cookHolder(g) : C.ROLES[g.stage] ? C.holder(g, g.stage) : null;
+    var h = '<div class="r1"><span class="logo">Brigade Cuisine</span>' + (role ? '<span class="rolechip">' + role + "</span>" : "") +
+      '<span class="meta">' + esc(ME.cls) + " · Kelompok " + ME.gid + (g.t0 ? "<br>⏱ " + mm + ":" + (ss < 10 ? "0" : "") + ss : "") + "</span></div>";
+    h += '<div class="prog">'; for (var i = 1; i < C.STAGES.length; i++) h += '<i class="' + (i < si ? "on" : i === si ? "now" : "") + '"></i>'; h += "</div>";
+    h += '<div class="mates">' + g.members.map(function (m) { return '<span class="mate' + (online(m.id) ? "" : " off") + (m.id === actv ? " act" : "") + (m.id === ME.pid ? " me" : "") + '">' + ART.hat(m.c) + esc(m.name) + "</span>"; }).join("") + "</div>";
+    if ($("#top").innerHTML !== h) $("#top").innerHTML = h;
+  }
+  function myRole(g) {
+    if (g.stage === "cook") return C.cookHolder(g) === ME.pid ? "Giliranmu memasak!" : "Juru masak";
+    if (C.ROLES[g.stage] && C.holder(g, g.stage) === ME.pid) return "Kamu: " + C.ROLES[g.stage];
+    return "";
+  }
+  function head(icon, title, sub) { return '<div class="stagehead"><div class="ic">' + icon + '</div><div><h2>' + title + '</h2><div class="muted">' + sub + "</div></div></div>"; }
+  function whoBox(g, stage, task) {
+    var h = C.holder(g, stage), mine = h === ME.pid;
+    var s = '<div class="who' + (mine ? " mine" : "") + '">' + (mine ? "<b>Kamu " + C.ROLES[stage] + "-nya!</b> " + task.me : C.ROLES[stage] + ": <b>" + esc(nameOf(h)) + "</b> · " + task.other) + "</div>";
+    if (!mine && h && !online(h)) s += '<button class="btn w sm" data-a="takeover" style="margin-bottom:10px">Ambil alih peran (' + esc(nameOf(h)) + " offline)</button>";
+    return s;
+  }
+  function recentPings(g) { var now = srvNow(), o = {}; (g.pings || []).forEach(function (p) { if (now - p.t < 12000) o[p.x] = p.p; }); return o; }
+  function ficheHTML(d) {
+    return '<div class="fiche"><h3>Fiche recette · ' + esc(d.fr) + '</h3><div class="muted">Ingrédients pour ' + esc(d.srv) + '</div><ul>' +
+      d.ing.map(function (x) { if (x[2]) return "<li>" + esc(x[2]) + "</li>"; var q = x[1], n = C.CAT[x[0]].n, art = /^(le |la |les |l')/.exec(n); var bare = n.replace(/^(le |la |les |l')/, ""); return "<li>" + esc(/de$|d'$/.test(q) ? q + (q.slice(-1) === "'" ? "" : " ") + bare : q + " " + (art ? bare : n)) + "</li>"; }).join("") + "</ul></div>";
+  }
+  var ICN = {
+    dish: ART.dish("crepes"), cart: '<svg viewBox="0 0 64 52"><path d="M4 6h10l6 28h32l6-20H16" fill="none" stroke="#3A2A1E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M18 14h40l-6 20H22z" fill="#F5B82E"/><circle class="wh" cx="24" cy="44" r="5" fill="#3A2A1E"/><circle class="wh" cx="48" cy="44" r="5" fill="#3A2A1E"/></svg>',
+    list: '<svg viewBox="0 0 64 64"><rect x="12" y="6" width="40" height="52" rx="6" fill="#fff" stroke="#3A2A1E" stroke-width="3"/><path d="M20 20h24M20 30h24M20 40h16" stroke="#E8503A" stroke-width="4" stroke-linecap="round"/></svg>',
+    loupe: '<svg viewBox="0 0 64 64"><circle cx="26" cy="26" r="16" fill="#BFE6F2" stroke="#3A2A1E" stroke-width="4"/><path d="M38 38l16 16" stroke="#3A2A1E" stroke-width="7" stroke-linecap="round"/></svg>',
+    pan: '<svg viewBox="0 0 64 64"><path d="M6 30h40c0 12-8 18-20 18S6 42 6 30z" fill="#37474F" stroke="#3A2A1E" stroke-width="3"/><path d="M46 32h14" stroke="#3A2A1E" stroke-width="6" stroke-linecap="round"/><path d="M16 22c-3-5 3-7 0-12M26 20c-3-5 3-7 0-12M36 22c-3-5 3-7 0-12" fill="none" stroke="#E8503A" stroke-width="3" stroke-linecap="round"/></svg>',
+    star: STAR
+  };
+
+  var VIEWS = {
+    lobby: function (g) {
+      var n = g.members.length;
+      return '<div class="door"><div class="chefimg">' + ART.chef("") + "</div></div>" +
+        '<h2 class="center" style="font-size:30px">Bonjour, les chefs !</h2><p class="center muted">Semua anggota Kelompok ' + ME.gid + ' membuka link ini di HP masing-masing.</p>' +
+        '<div class="card"><div class="hats">' + g.members.map(function (m) { return '<div class="hatc' + (online(m.id) ? "" : " off") + '">' + ART.hat(m.c) + esc(m.name) + (m.id === ME.pid ? "<br><span class=muted>(kamu)</span>" : "") + "</div>"; }).join("") +
+        "</div><p class=\"center\" style=\"margin:10px 0 0;font-weight:800\">" + n + " / " + C.MAXM + " chef di dapur</p></div>" +
+        '<h3 style="margin:16px 0 8px">Peran bergilir di tiap tahap</h3><div class="roles"><div><b>Chef</b>Memutuskan masakan</div><div><b>Pembeli</b>Belanja bahan di pasar</div><div><b>Asisten</b>Menyusun langkah</div><div><b>Pemeriksa</b>Mengecek impératif &amp; bahan</div></div>' +
+        '<p class="muted">Peran diundi saat mulai. Saat memasak, semua anggota mendapat giliran.</p>' +
+        '<div class="sticky"><button class="btn g wide" data-a="start"' + (n < 2 ? " disabled" : "") + ">" + (n < 2 ? "Menunggu teman…" : "C'est parti ! Mulai") + "</button></div>";
+    },
+    menu: function (g) {
+      var chef = C.holder(g, "menu") === ME.pid, myv = g.votes[ME.pid], tally = {};
+      Object.keys(g.votes).forEach(function (p) { (tally[g.votes[p]] = tally[g.votes[p]] || []).push(p); });
+      var h = head(ICN.dish, "Le Menu", "Pilih 1 dari 10 masakan") + whoBox(g, "menu", { me: "Beri suara bersama teman, lalu putuskan.", other: "Ketuk masakan untuk memberi suara." });
+      h += '<div class="dishes">' + C.DISHES.map(function (d) {
+        var tk = ST.claims[d.id] && ST.claims[d.id] !== g.gid;
+        return '<button class="dcard' + (myv === d.id ? " sel" : "") + (tk ? " taken" : "") + '" data-a="vote" data-d="' + d.id + '"' + (tk ? " disabled" : "") + ">" + ART.dish(d.id) + "<b>" + esc(d.fr) + "</b><span>" + esc(d.idn) + "</span>" +
+          '<div class="votes">' + (tally[d.id] || []).map(function (p) { return ART.hat(colorOf(p)); }).join("") + "</div>" + (tk ? '<span class="tk">Kelompok ' + ST.claims[d.id] + "</span>" : "") + "</button>";
+      }).join("") + "</div>";
+      if (chef) { var d = myv && C.DMAP[myv]; h += '<div class="sticky"><button class="btn wide" data-a="pick"' + (d ? "" : " disabled") + ">" + (d ? "Chef memilih: " + esc(d.fr) + " ✓" : "Ketuk masakan dulu") + "</button></div>"; }
+      return h;
+    },
+    market: function (g) {
+      var d = C.DMAP[g.dish], buyer = C.holder(g, "market") === ME.pid, pg = recentPings(g), spent = g.basket.reduce(function (s, x) { return s + C.CAT[x].p; }, 0);
+      var h = '<div class="awning"></div>' + head(ICN.cart, "Le Marché", "Belanja untuk " + esc(d.fr)) +
+        whoBox(g, "market", { me: "Ketuk gambar untuk melihat namanya dalam bahasa Prancis. Dengarkan teman membacakan daftar belanja!", other: "Bacakan fiche recette untuk Pembeli! Ketuk gambar untuk menunjuk bahan." });
+      h += '<div class="cartbar"><div id="cart">' + ICN.cart + '</div><div class="bitems">' + g.basket.map(function (x) { return "<span>" + ART.item(x) + "</span>"; }).join("") + '</div><span class="wallet">' + (30 - spent) + " €</span></div>";
+      if (!buyer) h += ficheHTML(d) + '<div style="height:12px"></div>';
+      h += '<div class="shelf">' + g.market.map(function (x) {
+        var inb = g.basket.indexOf(x) >= 0;
+        return '<button class="it' + (inb ? " in" : "") + (buyer && SEL === x ? " sel" : "") + '" id="it-' + x + '" data-a="item" data-x="' + x + '">' + ART.item(x) + '<span class="pr">' + C.CAT[x].p + ' €</span><span class="nm">' + (buyer && (SEL === x || inb) ? esc(C.CAT[x].n) : "") + "</span>" + (pg[x] ? '<span class="pingb">' + esc(nameOf(pg[x])) + " 👉</span>" : "") + "</button>";
+      }).join("") + "</div>";
+      if (buyer && SEL) {
+        var inb2 = g.basket.indexOf(SEL) >= 0;
+        h += '<div class="pinbar"><div class="pic">' + ART.item(SEL) + '</div><div class="nmb">' + esc(C.CAT[SEL].n) + '<br><span class="muted">' + C.CAT[SEL].p + ' €</span></div><button class="spk" data-a="say" data-s="' + esc(C.CAT[SEL].n) + '">' + SPK + '</button><button class="btn sm ' + (inb2 ? "w" : "g") + '" data-a="toggle" data-x="' + SEL + '">' + (inb2 ? "Keluarkan" : "Masukkan") + "</button></div>";
+      }
+      if (buyer) h += '<div class="sticky"><button class="btn y wide" data-a="doneMarket"' + (g.basket.length ? "" : " disabled") + ">Selesai belanja (" + g.basket.length + " bahan) →</button></div>";
+      return h;
+    },
+    steps: function (g) {
+      var d = C.DMAP[g.dish], asis = C.holder(g, "steps") === ME.pid, pg = recentPings(g);
+      var h = head(ICN.list, "La Recette", "Susun langkah " + esc(d.fr)) + whoBox(g, "steps", { me: "Ketuk kartu untuk memasukkan ke slot berikutnya. Ketuk slot untuk mengeluarkan.", other: "Ketuk kartu untuk memberi saran ke Asisten." }) +
+        '<div class="trapnote">8 kartu, 7 slot: ada 1 langkah jebakan yang tidak cocok untuk resep ini!</div><div class="slots">';
+      for (var i = 0; i < C.NSTEP; i++) {
+        var c = g.seq[i];
+        h += c == null ? '<div class="slot"><span class="n">' + (i + 1) + '</span><span class="tx muted">…</span></div>' :
+          '<button class="slot f" data-a="unplace" data-c="' + c + '"><span class="n">' + (i + 1) + '</span><span class="tx">' + sentence(C.stepOf(d, c), "(" + C.VERB[C.stepOf(d, c).v][1] + ")", "inf") + "</span></button>";
+      }
+      h += '</div><div class="pool">' + g.cards.filter(function (c) { return g.seq.indexOf(c) < 0; }).map(function (c) {
+        var st = C.stepOf(d, c);
+        return '<div class="scard" data-a="card" data-c="' + c + '"><span class="tx">' + sentence(st, "(" + C.VERB[st.v][1] + ")", "inf") + '</span><button class="spk" data-a="say" data-s="' + esc(plain(st, C.VERB[st.v][1])) + '">' + SPK + "</button>" + (pg["c" + c] ? '<span class="pingb">' + esc(nameOf(pg["c" + c])) + " 👉</span>" : "") + "</div>";
+      }).join("") + "</div>";
+      if (asis) h += '<div class="sticky"><button class="btn y wide" data-a="doneSteps"' + (g.seq.length === C.NSTEP ? "" : " disabled") + ">Resep tersusun →</button></div>";
+      return h;
+    },
+    check: function (g) {
+      var d = C.DMAP[g.dish], pg = recentPings(g), chk = C.holder(g, "check") === ME.pid, all = g.seq.every(function (c) { return g.verbs[c] !== undefined; });
+      var h = head(ICN.loupe, "Le Contrôle", "Periksa sebelum memasak") + whoBox(g, "check", { me: "Pilih bentuk impératif (vous) yang tepat, lalu buang bahan yang tidak ada di resep.", other: "Bantu Pemeriksa! Ketuk pilihan untuk memberi saran." });
+      h += '<h3 style="margin:6px 0 8px">1. Bentuk impératif</h3><div class="chkl">' + g.seq.map(function (c, k) {
+        var st = C.stepOf(d, c), forms = C.VERB[st.v], ch = g.verbs[c];
+        return '<div class="chki"><div class="tx"><b>' + (k + 1) + ".</b> " + sentence(st, ch !== undefined ? forms[ch] : "_____", "blank") + '</div><div class="vchips">' +
+          g.vo[c].map(function (o) { var f = forms[o], pp = pg["v" + c + "_" + o]; if (st.t.indexOf("___") === 0) f = cap(f); return '<button style="position:relative" class="' + (ch === o ? "on" : "") + '" data-a="verb" data-c="' + c + '" data-o="' + o + '">' + esc(f) + (pp ? '<span class="pingb">' + esc(nameOf(pp)) + "</span>" : "") + "</button>"; }).join("") + "</div></div>";
+      }).join("") + "</div>";
+      h += '<h3 style="margin:16px 0 8px">2. Isi keranjang</h3>' + ficheHTML(d) + '<div style="height:10px"></div><div class="bask2">' +
+        g.basket.map(function (x) { return '<div class="bk">' + ART.item(x) + esc(C.CAT[x].n) + (chk ? '<br><button data-a="rm" data-x="' + x + '">✕ buang</button>' : "") + "</div>"; }).join("") +
+        g.removed.map(function (x) { return '<div class="bk rmd">' + ART.item(x) + esc(C.CAT[x].n) + (chk ? '<br><button data-a="unrm" data-x="' + x + '">↺ kembalikan</button>' : "<br>dibuang") + "</div>"; }).join("") + "</div>";
+      if (chk) h += '<div class="sticky"><button class="btn wide" data-a="doneCheck"' + (all ? "" : " disabled") + ">" + (all ? "Siap memasak! 🔥" : "Lengkapi semua kata kerja") + "</button></div>";
+      return h;
+    },
+    cook: function (g) {
+      var d = C.DMAP[g.dish], ck = g.cook, i = ck.i, c = g.seq[i], st = C.stepOf(d, c), verb = C.VERB[st.v][g.verbs[c]], mine = ck.as[i] === ME.pid;
+      var vshow = st.t.indexOf("___") === 0 ? cap(verb) : verb;
+      var h = head(ICN.pan, "En cuisine !", esc(d.fr) + " · langkah " + (i + 1) + " dari " + g.seq.length);
+      h += '<div class="kitchen"><div class="win"></div><div class="kchef">' + ART.chef(mine ? "wow" : "") + '</div><div class="bub">' + esc(cap(verb)) + ' !</div><div class="tool">' + ART.sv("-10 -20 220 130", ART.tool(st.a)) + "</div></div>";
+      h += '<div class="cdots">' + g.seq.map(function (_, k) { return '<i class="' + (k < i ? "d" : k === i ? "c" : "") + '">' + (k + 1) + "</i>"; }).join("") + "</div>";
+      h += '<div class="card" style="font-weight:700;line-height:1.4">' + sentence(st, vshow, "blank") + ' <button class="spk" style="vertical-align:middle" data-a="say" data-s="' + esc(plain(st, verb)) + '">' + SPK + "</button></div>";
+      if (mine) h += padHTML(st, cap(verb), i);
+      else {
+        h += '<div class="who" style="margin-top:12px">Giliran <b>' + esc(nameOf(ck.as[i])) + "</b> memasak. Semangati dengan tombol di bawah!</div>";
+        if (!online(ck.as[i])) h += '<button class="btn w sm" data-a="takeover">Gantikan ' + esc(nameOf(ck.as[i])) + " (offline)</button>";
+        var nx = ck.as.indexOf(ME.pid, i); if (nx > i) h += '<p class="muted center">Giliranmu: langkah ' + (nx + 1) + "</p>";
+      }
+      return h;
+    },
+    result: function (g) {
+      var d = C.DMAP[g.dish], r = g.res, cls = r.total >= 85 ? "perfect" : r.total >= 60 ? "meh" : "rate";
+      var q = r.total >= 90 ? "Magnifique ! C'est un vrai chef-d'œuvre !" : r.total >= 70 ? "Très bon ! Encore un petit effort et c'est parfait." : r.total >= 50 ? "Pas mal… mais attention aux détails !" : "Oh là là ! Ce plat est raté… On recommence ?";
+      var h = '<div class="reveal"><div class="rays"></div>' + ART.dish(d.id, cls) + (cls === "rate" ? '<span class="smoke" style="left:42%"></span><span class="smoke" style="left:54%;animation-delay:.8s"></span><span class="smoke" style="left:48%;animation-delay:1.5s"></span>' : "") +
+        '<svg class="clo" viewBox="0 0 200 100">' + '<path d="M10 96c0-60 180-60 180 0z" fill="#D7DEE6" stroke="#3A2A1E" stroke-width="3"/><circle cx="100" cy="30" r="9" fill="#B0BAC5" stroke="#3A2A1E" stroke-width="3"/><rect x="2" y="92" width="196" height="8" rx="4" fill="#B0BAC5"/></svg></div>';
+      h += '<h2 class="center" style="font-size:28px">' + esc(d.fr) + "</h2>";
+      h += '<div class="stars">' + [0, 1, 2].map(function (k) { return STAR.replace("<svg", '<svg class="' + (k < r.stars ? "on" : "") + '" style="animation-delay:' + (2.2 + k * 0.3) + 's"'); }).join("") + "</div>";
+      h += '<div class="bignum" id="bignum" data-v="' + r.total + '">0</div><p class="center muted" style="margin-top:0">Nilai kelompok</p>';
+      h += '<div class="quote"><div class="chefimg">' + ART.chef(r.total >= 70 ? "wow" : r.total >= 50 ? "" : "sad") + '</div><div class="sb">« ' + esc(q) + ' »<br><span class="muted" style="font-family:Nunito;font-size:13px">— Chef Marcel</span></div></div><div style="height:12px"></div>';
+      var bar = function (lb, v, col) { return '<div class="bar"><div class="lb"><span>' + lb + "</span><span>" + v + '%</span></div><div class="tr"><i data-w="' + v + '" style="background:' + col + '"></i></div></div>'; };
+      h += '<div class="card bars">' + bar("Bahan (Pembeli + Pemeriksa)", r.ing, "#2BB38A") + bar("Urutan langkah (Asisten)", r.step, "#3D7BC9") + bar("Impératif (Pemeriksa)", r.verb, "#F5B82E") + bar("Memasak (semua)", r.cookp, "#E8503A") + "</div><div style=\"height:12px\"></div>";
+      var nm = function (x) { return esc(C.CAT[x].n); };
+      h += '<div class="card mist"><h3>Catatan Chef</h3>' +
+        (r.wrong.length ? '<div><span class="bad">Bahan salah:</span> ' + r.wrong.map(nm).join(", ") + "</div>" : '<div><span class="good">Tidak ada bahan salah</span></div>') +
+        (r.miss.length ? '<div><span class="bad">Bahan kurang:</span> ' + r.miss.map(nm).join(", ") + "</div>" : '<div><span class="good">Bahan lengkap</span></div>') +
+        (r.trap ? '<div><span class="bad">Langkah jebakan ikut dimasak:</span> « ' + esc(plain(d.trap, C.VERB[d.trap.v][0])) + " »</div>" : '<div><span class="good">Langkah jebakan berhasil dihindari</span></div>') +
+        (r.vBad.length ? '<div><span class="bad">Impératif yang keliru:</span> ' + r.vBad.map(function (c) { var st = d.steps[c]; return esc(C.VERB[st.v][g.verbs[c]]) + " → <b>" + esc(C.VERB[st.v][0]) + "</b>"; }).join(" · ") + "</div>" : '<div><span class="good">Semua impératif benar</span></div>') +
+        "</div><div style=\"height:12px\"></div>";
+      var full = C.fullText(d);
+      h += '<div class="card recipe"><div class="row"><h3 style="flex:1">Texte procédural yang benar</h3><button class="spk" data-a="say" data-s="' + esc(d.fr + ". " + full.join(" ")) + '">' + SPK + "</button></div>" + ficheHTML(d) +
+        '<p style="margin:10px 0 0;font-weight:800">Préparation</p><ol>' + full.map(function (s, k) { return '<li class="' + (g.seq[k] === k ? "" : "x") + '">' + esc(s) + "</li>"; }).join("") + '</ol><p class="muted">Merah = urutan kalian berbeda di nomor itu.</p></div><div style="height:12px"></div>';
+      h += '<div class="fact"><b>Le saviez-vous ?</b><br>' + esc(d.fact) + "</div>";
+      h += '<p class="center muted" style="margin-top:16px">Hasil sudah terkirim ke guru. Merci, les chefs !</p>';
+      return h;
+    }
+  };
+  var SEL = null;
+  function after(g, first) {
+    if (g.stage === "result") {
+      var bn = $("#bignum"); if (bn) { var v = +bn.getAttribute("data-v"), t0 = Date.now() + 2000; (function tick() { var p = Math.min(1, Math.max(0, (Date.now() - t0) / 1200)); bn.textContent = Math.round(v * p); if (p < 1) requestAnimationFrame(tick); else if (first && v >= 70) confetti(90); })(); }
+      setTimeout(function () { Array.prototype.forEach.call(document.querySelectorAll(".bar i"), function (i) { i.style.width = i.getAttribute("data-w") + "%"; }); }, 2600);
+    }
+    if (g.stage === "cook" && g.cook.as[g.cook.i] === ME.pid) bindPad(g);
+  }
+
+  /* ---- mini-game memasak ---- */
+  function padHTML(st, verb, i) {
+    var gt = C.GEST[st.a], hint = gt === "tap" ? "Ketuk layar ini secepat mungkin! (15×)" : gt === "swipe" ? "Geser jari ke kiri-kanan untuk memotong! (4×)" : "Tahan layar, lepaskan saat bar di zona hijau!";
+    return '<div class="pad" id="pad" data-g="' + gt + '" data-i="' + i + '"><div class="verb">' + esc(verb) + ' !</div><div class="hint">' + hint + "</div>" +
+      (gt === "hold" ? '<div class="meter"><div class="zone"></div><div class="fill" id="pfill"></div></div>' : '<div class="cnt" id="pcnt">0</div>') + "</div>";
+  }
+  function bindPad(g) {
+    var pad = $("#pad"); if (!pad) return;
+    var gt = pad.getAttribute("data-g"), i = +pad.getAttribute("data-i");
+    if (GS && GS.i === i && GS.done) { pad.innerHTML = '<div class="res">Envoyé !</div>'; return; }
+    GS = { i: i, gt: gt, active: false, done: false, n: 0, t0: 0, x0: null, dir: 0, raf: 0 };
+    function finish(q, label) {
+      if (GS.done) return; GS.done = true; GS.active = false; cancelAnimationFrame(GS.raf);
+      pad.innerHTML = '<div class="res">' + label + "</div>";
+      if (q >= 0.8) SFX.ok(); else if (q < 0.4) SFX.bad(); else SFX.pop();
+      act({ t: "cook", i: i, q: q });
+    }
+    function lab(q) { return q >= 0.9 ? "Parfait !" : q >= 0.7 ? "Très bien !" : q >= 0.4 ? "Pas mal !" : "Oups !"; }
+    pad.addEventListener("pointerdown", function (e) {
+      e.preventDefault(); if (GS.done) return; ac();
+      if (gt === "tap") {
+        if (!GS.active) { GS.active = true; GS.t0 = Date.now(); setTimeout(function () { if (!GS.done) { var q = GS.n / 15; finish(q, lab(q)); } }, 6000); }
+        GS.n++; SFX.tap(); pad.classList.remove("hit"); void pad.offsetWidth; pad.classList.add("hit");
+        var c = $("#pcnt"); if (c) c.textContent = GS.n;
+        if (GS.n >= 15) { var el = (Date.now() - GS.t0) / 1000, q = el < 4 ? 1 : Math.max(0.6, 1 - (el - 4) * 0.2); finish(q, lab(q)); }
+      } else if (gt === "swipe") {
+        if (!GS.active) { GS.active = true; GS.t0 = Date.now(); setTimeout(function () { if (!GS.done) { var q = GS.n / 4 * 0.6; finish(q, lab(q)); } }, 10000); }
+        GS.x0 = e.clientX;
+      } else {
+        GS.active = true; GS.t0 = Date.now(); SFX.sizzle();
+        var f = $("#pfill");
+        (function loop() { var v = (Date.now() - GS.t0) / 2400 * 100; if (f) f.style.width = Math.min(100, v) + "%"; if (v >= 112) { finish(0.1, "Brûlé !"); return; } GS.raf = requestAnimationFrame(loop); })();
+      }
+    });
+    pad.addEventListener("pointermove", function (e) {
+      if (gt !== "swipe" || GS.done || GS.x0 == null) return;
+      var dx = e.clientX - GS.x0;
+      if (Math.abs(dx) > 90) {
+        GS.n++; GS.x0 = e.clientX; SFX.tap(); var c = $("#pcnt"); if (c) c.textContent = GS.n;
+        pad.classList.remove("hit"); void pad.offsetWidth; pad.classList.add("hit");
+        if (GS.n >= 4) { var el = (Date.now() - GS.t0) / 1000, q = el < 4 ? 1 : Math.max(0.6, 1 - (el - 4) * 0.08); finish(q, lab(q)); }
+      }
+    });
+    function up() {
+      if (gt === "swipe") { GS.x0 = null; return; }
+      if (gt !== "hold" || GS.done || !GS.active) return;
+      var v = (Date.now() - GS.t0) / 2400 * 100, q = v >= 65 && v <= 85 ? 1 : Math.max(0, 1 - Math.min(Math.abs(v - 65), Math.abs(v - 85)) / 40);
+      finish(q, lab(q));
+    }
+    pad.addEventListener("pointerup", up); pad.addEventListener("pointercancel", up); pad.addEventListener("pointerleave", up);
+  }
+
+  /* ---- layar masuk ---- */
+  var jg = ME.gid || 0;
+  function renderJoin() {
+    $("#top").innerHTML = "";
+    var h = '<div class="hero"><div class="chefimg">' + ART.chef("") + '</div><h1>Brigade Cuisine</h1><div class="sub">Game memasak kelompok · Teks prosedural</div></div>' +
+      '<div class="card col"><div><label>Kode kelas</label><input id="jcls" maxlength="12" placeholder="mis. XII-F1" value="' + esc(ME.cls) + '"></div>' +
+      '<div><label>Nomor kelompok</label><div class="gpick">' + [1, 2, 3, 4, 5, 6, 7, 8].map(function (n) { return '<button data-a="gp" data-n="' + n + '" class="' + (jg === n ? "on" : "") + '">' + n + "</button>"; }).join("") + "</div></div>" +
+      '<div><label>Nama panggilan</label><input id="jname" maxlength="16" placeholder="mis. Rina" value="' + esc(ME.name) + '"></div>' +
+      '<div class="priv"><b>Jaga privasi:</b> cukup nama panggilan. Jangan menulis nomor HP, alamat, atau data pribadi lain.</div>' +
+      '<button class="btn g wide" data-a="join">Masuk dapur</button></div>' +
+      '<p class="center"><button class="muted" data-a="toguru" style="text-decoration:underline">Mode guru</button></p>';
+    if (APP.getAttribute("data-v") !== "join") { $("#main").innerHTML = h; APP.setAttribute("data-v", "join"); }
+    else Array.prototype.forEach.call(document.querySelectorAll(".gpick button"), function (b) { b.classList.toggle("on", +b.getAttribute("data-n") === jg); });
+  }
+  function doJoin() {
+    var cls = C.normClass($("#jcls").value), nm = $("#jname").value.trim();
+    if (!cls) return toast("Isi kode kelas dari guru");
+    if (!jg) return toast("Pilih nomor kelompok");
+    if (!nm) return toast("Isi nama panggilan");
+    ME.cls = cls; ME.gid = jg; ME.name = nm; lsSet("cls", cls); lsSet("gid", jg); lsSet("name", nm);
+    ac();
+    call("act", { cls: cls, gid: jg, pid: ME.pid, act: { t: "join", name: nm } }).then(function (r) {
+      if (r.err || r.msg) { toast(r.err || r.msg); return; }
+      ME.joined = true; APP.removeAttribute("data-v"); lastKey = ""; accept(r, false); startPoll(); SFX.ok();
+    }).catch(function () { toast("Tidak bisa terhubung. Cek internet."); });
+  }
+
+  /* ---- panel guru ---- */
+  var GU = { pin: lsGet("gpin") || "", cls: ME.cls || "", data: null, t: null, arm: null };
+  function guruCall(op, extra) {
+    var a = { pin: GU.pin, cls: GU.cls, op: op }; Object.keys(extra || {}).forEach(function (k) { a[k] = extra[k]; });
+    return call("guru", a).then(function (r) { if (r.err) { toast(r.err); return; } if (op === "sheet") { if (r.url) window.open(r.url, "_blank"); return; } GU.data = r; renderGuru(); });
+  }
+  function renderGuru() {
+    $("#dock").classList.remove("show");
+    $("#top").innerHTML = '<div class="r1"><span class="logo">Brigade Cuisine · Panel Guru</span><span class="meta">' + esc(GU.cls) + "</span></div>";
+    if (!GU.data) {
+      $("#main").innerHTML = '<div class="hero"><div class="chefimg">' + ART.chef("") + '</div><h1 style="font-size:30px">Panel Guru</h1></div><div class="card col"><div><label>PIN guru</label><input id="gpin" type="password" value="' + esc(GU.pin) + '"></div><div><label>Kode kelas</label><input id="gcls" maxlength="12" placeholder="mis. XII-F1" value="' + esc(GU.cls) + '"></div><button class="btn wide" data-a="guruOpen">Buka panel</button><button class="btn w wide" data-a="toplay">Kembali ke game</button></div>';
+      return;
+    }
+    var D = GU.data, now = D.now, h = "";
+    var fin = D.groups.filter(function (x) { return x.g.res; }).sort(function (a, b) { return b.g.res.total - a.g.res.total; });
+    h += '<div class="row" style="margin-bottom:10px"><h2 style="flex:1">Kelas ' + esc(D.cls) + '</h2><button class="btn w sm" data-a="guruSheet">Buka Sheet hasil</button></div>';
+    h += '<div class="card"><h3>Papan skor</h3>' + (fin.length ? fin.map(function (x, k) { var r = x.g.res; return '<div class="rank" style="margin-top:8px"><span class="p">' + (k + 1) + '</span><span style="flex:1">Kelompok ' + x.g.gid + " · " + esc(C.DMAP[x.g.dish].fr) + '</span><span style="color:var(--musd)">' + "★".repeat(r.stars) + "☆".repeat(3 - r.stars) + '</span><b style="font-size:22px">' + r.total + "</b></div>"; }).join("") : '<p class="muted">Belum ada kelompok yang selesai.</p>') + "</div><div style=\"height:12px\"></div>";
+    h += '<h3 style="margin-bottom:8px">Kelompok</h3><div class="gtable">' + (D.groups.length ? D.groups.map(function (x) {
+      var g = x.g, el = g.t0 ? Math.round(((g.tEnd || now) - g.t0) / 60000) : 0, arm = GU.arm === "g" + g.gid;
+      return '<div class="gcard"><div class="row"><h3 style="flex:1">Kelompok ' + g.gid + '</h3><span class="tag st">' + ({ lobby: "Lobi", menu: "Memilih menu", market: "Belanja", steps: "Menyusun langkah", check: "Memeriksa", cook: "Memasak", result: "Selesai" })[g.stage] + "</span></div>" +
+        '<div class="muted" style="margin:4px 0">' + g.members.map(function (m) { return (now - (x.pres[m.id] || 0) < 15000 ? "🟢 " : "⚪ ") + esc(m.name); }).join(" · ") + "</div>" +
+        "<div>" + (g.dish ? "Masakan: <b>" + esc(C.DMAP[g.dish].fr) + "</b>" : "Belum memilih masakan") + (g.t0 ? " · " + el + " menit" : "") + (g.res ? ' · <span class="tag ok">Nilai ' + g.res.total + "</span>" : "") + "</div>" +
+        (g.res ? '<div class="muted">Bahan ' + g.res.ing + "% · Urutan " + g.res.step + "% · Impératif " + g.res.verb + "% · Memasak " + g.res.cookp + "%</div>" : "") +
+        '<div style="margin-top:8px"><button class="btn sm ' + (arm ? "" : "w") + '" data-a="guruReset" data-g="' + g.gid + '">' + (arm ? "Ketuk lagi untuk reset" : "Reset kelompok") + "</button></div></div>";
+    }).join("") : '<p class="muted">Belum ada siswa yang masuk. Bagikan link game + kode kelas <b>' + esc(D.cls) + "</b>.</p>") + "</div><div style=\"height:12px\"></div>";
+    h += '<div class="card"><h3>Masakan di kelas ini</h3><p class="muted">Masakan yang sudah diambil tidak bisa dipilih kelompok lain.</p><div class="claims">' + C.DISHES.map(function (d) {
+      var k = D.claims[d.id];
+      return '<div class="' + (k ? "t" : "") + '"><span style="flex:1">' + esc(d.fr) + "</span>" + (k ? '<b>K' + k + '</b><button class="tag" data-a="guruRel" data-d="' + d.id + '">lepas</button>' : '<span class="muted">bebas</span>') + "</div>";
+    }).join("") + "</div></div><div style=\"height:12px\"></div>";
+    h += '<button class="btn ' + (GU.arm === "all" ? "" : "w") + ' wide" data-a="guruResetAll">' + (GU.arm === "all" ? "Ketuk lagi: hapus semua data kelas ini" : "Reset seluruh kelas") + '</button><div style="height:10px"></div><button class="btn w wide" data-a="guruBack">Ganti kelas</button>';
+    $("#main").innerHTML = h;
+  }
+
+  /* ---- klik ---- */
+  document.addEventListener("click", function (e) {
+    var el = e.target.closest("[data-a]"); if (!el) return;
+    var a = el.getAttribute("data-a"), g = ST.g;
+    if (a === "say") { e.stopPropagation(); speak(el.getAttribute("data-s")); return; }
+    if (a === "closeov") { $("#ov").classList.remove("show"); return; }
+    if (a === "gp") { jg = +el.getAttribute("data-n"); SFX.tap(); renderJoin(); return; }
+    if (a === "join") return doJoin();
+    if (a === "toguru") { mode = "guru"; GU.cls = C.normClass(($("#jcls") || {}).value || GU.cls); APP.removeAttribute("data-v"); render(); return; }
+    if (a === "toplay") { mode = "play"; APP.removeAttribute("data-v"); render(); return; }
+    if (a === "guruOpen") {
+      GU.pin = $("#gpin").value; GU.cls = C.normClass($("#gcls").value); if (!GU.cls) return toast("Isi kode kelas");
+      lsSet("gpin", GU.pin); guruCall("overview"); clearInterval(GU.t); GU.t = setInterval(function () { if (mode === "guru" && GU.data) guruCall("overview"); }, 4000); return;
+    }
+    if (a === "guruBack") { GU.data = null; clearInterval(GU.t); renderGuru(); return; }
+    if (a === "guruSheet") return guruCall("sheet");
+    if (a === "guruRel") return guruCall("release", { d: el.getAttribute("data-d") });
+    if (a === "guruReset") { var k = "g" + el.getAttribute("data-g"); if (GU.arm === k) { GU.arm = null; guruCall("resetGroup", { gid: +el.getAttribute("data-g") }); } else { GU.arm = k; renderGuru(); setTimeout(function () { if (GU.arm === k) { GU.arm = null; renderGuru(); } }, 4000); } return; }
+    if (a === "guruResetAll") { if (GU.arm === "all") { GU.arm = null; guruCall("resetClass"); } else { GU.arm = "all"; renderGuru(); setTimeout(function () { if (GU.arm === "all") { GU.arm = null; renderGuru(); } }, 4000); } return; }
+    if (!g) return;
+    if (a === "react") { var kk = el.getAttribute("data-k"); floaty(kk, "kamu"); SFX.pop(); act({ t: "react", k: kk }); return; }
+    if (a === "start") return act({ t: "start" });
+    if (a === "takeover") return act({ t: "takeover" });
+    if (a === "vote") { SFX.tap(); return act({ t: "vote", d: el.getAttribute("data-d") }); }
+    if (a === "pick") { var v = g.votes[ME.pid]; if (v) act({ t: "pick", d: v }); return; }
+    if (a === "item") {
+      var x = el.getAttribute("data-x");
+      if (C.holder(g, "market") === ME.pid) { SEL = SEL === x ? null : x; SFX.tap(); speak(C.CAT[x].n); lastKey = ""; render(); }
+      else { SFX.tap(); act({ t: "ping", x: x }); }
+      return;
+    }
+    if (a === "toggle") { var x2 = el.getAttribute("data-x"), adding = g.basket.indexOf(x2) < 0; if (adding) { flyTo(document.getElementById("it-" + x2), $("#cart"), ART.item(x2)); SFX.coin(); } SEL = null; act({ t: "toggle", x: x2 }); return; }
+    if (a === "doneMarket") { SEL = null; return act({ t: "doneMarket" }); }
+    if (a === "card") { var c = +el.getAttribute("data-c"); if (C.holder(g, "steps") === ME.pid) { SFX.pop(); act({ t: "place", c: c }); } else { SFX.tap(); act({ t: "ping", x: "c" + c }); } return; }
+    if (a === "unplace") { if (C.holder(g, "steps") === ME.pid) { SFX.tap(); act({ t: "unplace", c: +el.getAttribute("data-c") }); } return; }
+    if (a === "doneSteps") return act({ t: "doneSteps" });
+    if (a === "verb") { if (C.holder(g, "check") === ME.pid) { SFX.tap(); act({ t: "verb", c: +el.getAttribute("data-c"), o: +el.getAttribute("data-o") }); } else { SFX.tap(); act({ t: "ping", x: "v" + el.getAttribute("data-c") + "_" + el.getAttribute("data-o") }); } return; }
+    if (a === "rm") { SFX.pop(); return act({ t: "rm", x: el.getAttribute("data-x") }); }
+    if (a === "unrm") { SFX.pop(); return act({ t: "unrm", x: el.getAttribute("data-x") }); }
+    if (a === "doneCheck") return act({ t: "doneCheck" });
+  });
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) poll(); });
+  setInterval(function () { if (mode === "play" && ST.g) renderTop(ST.g); }, 1000);
+
+  /* ---- mulai ---- */
+  $("#dock").innerHTML = ["👏", "😋", "🔥", "🤔", "⏰"].map(function (k) { return '<button data-a="react" data-k="' + k + '">' + k + "</button>"; }).join("");
+  if (mode === "play" && ME.cls && ME.gid && ME.name) {
+    jg = ME.gid;
+    call("state", { cls: ME.cls, gid: ME.gid, pid: ME.pid }).then(function (r) {
+      if (r && !r.err && C.member(r.g, ME.pid)) { ME.joined = true; accept(r, false); startPoll(); } else render();
+    }).catch(function () { render(); });
+  }
+  render();
+  window.__bcl = { ST: ST, ME: ME, act: act };
+})();
+
+</script></body></html>
